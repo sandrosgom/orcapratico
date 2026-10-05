@@ -2,19 +2,18 @@
 <html lang="pt-BR">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>OrçaPrático</title>
+
+    <!-- SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <!-- GERADOR DE PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
-
         * {
             box-sizing: border-box;
             margin: 0;
@@ -46,16 +45,185 @@
             padding: 0;
         }
 
-        /* =========================
-           CABEÇALHO
-        ========================= */
+        /* ==============================
+           LOGIN
+        ============================== */
+
+        #loginScreen,
+        #resetScreen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: var(--bg-app);
+        }
+
+        #resetScreen {
+            display: none;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px 20px;
+            box-shadow:
+                0 10px 25px -5px rgba(0, 0, 0, .08),
+                0 8px 10px -6px rgba(0, 0, 0, .06);
+        }
+
+        .login-logo {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 15px;
+            border-radius: 18px;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .login-title {
+            text-align: center;
+            font-size: 25px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .login-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .login-field {
+            margin-bottom: 14px;
+        }
+
+        .login-field label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .login-field input {
+            width: 100%;
+            height: 50px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0 14px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .login-field input:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-login {
+            width: 100%;
+            height: 52px;
+            border: 0;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            margin-top: 5px;
+            cursor: pointer;
+        }
+
+        .btn-login:active {
+            background: var(--primary-hover);
+            transform: scale(.98);
+        }
+
+        .btn-register {
+            width: 100%;
+            height: 48px;
+            border: 0;
+            border-radius: 12px;
+            background: #e8f0ff;
+            color: var(--primary);
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .btn-reset {
+            width: 100%;
+            height: 52px;
+            border: 0;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            margin-top: 5px;
+            cursor: pointer;
+        }
+
+        .btn-back {
+            width: 100%;
+            height: 48px;
+            border: 0;
+            border-radius: 12px;
+            background: #e8f0ff;
+            color: var(--primary);
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .login-message {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .login-message.error {
+            color: #dc2626;
+        }
+
+        .login-message.success {
+            color: #16a34a;
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 18px;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        /* ==============================
+           APLICATIVO
+        ============================== */
+
+        #appScreen {
+            display: none;
+        }
 
         header {
             width: 100%;
             background: var(--primary);
             color: white;
             text-align: center;
-            padding: 20px 15px;
+            padding: 16px 15px;
         }
 
         header h1 {
@@ -63,9 +231,35 @@
             font-weight: 700;
         }
 
-        /* =========================
-           CONTAINER
-        ========================= */
+        .user-bar {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 8px 12px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-email {
+            font-size: 12px;
+            color: rgba(255, 255, 255, .9);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .btn-logout {
+            border: 0;
+            border-radius: 8px;
+            padding: 7px 10px;
+            background: rgba(255, 255, 255, .18);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+        }
 
         .app-container {
             width: 100%;
@@ -74,18 +268,14 @@
             padding: 15px;
         }
 
-        /* =========================
-           CARDS
-        ========================= */
-
         .card {
             background: var(--surface);
             border-radius: var(--radius);
             padding: 18px;
             margin-bottom: 15px;
             box-shadow:
-                0 10px 25px -5px rgba(0,0,0,.05),
-                0 8px 10px -6px rgba(0,0,0,.05);
+                0 10px 25px -5px rgba(0, 0, 0, .05),
+                0 8px 10px -6px rgba(0, 0, 0, .05);
         }
 
         .card-title {
@@ -93,10 +283,6 @@
             font-weight: bold;
             margin-bottom: 15px;
         }
-
-        /* =========================
-           CAMPOS
-        ========================= */
 
         .field {
             margin-bottom: 13px;
@@ -130,10 +316,6 @@
             border-color: var(--primary);
         }
 
-        /* =========================
-           ITEM
-        ========================= */
-
         .item-row {
             display: grid;
             grid-template-columns: minmax(0, 1fr) 105px;
@@ -159,11 +341,8 @@
             color: #dc2626;
             font-size: 14px;
             font-weight: bold;
+            cursor: pointer;
         }
-
-        /* =========================
-           BOTÕES
-        ========================= */
 
         button {
             font-family: Arial, Helvetica, sans-serif;
@@ -204,18 +383,14 @@
             transform: scale(.98);
         }
 
-        /* =========================
-           TOTAL
-        ========================= */
-
         .total-card {
             background: white;
             border-radius: var(--radius);
             padding: 20px;
             margin-bottom: 20px;
             box-shadow:
-                0 10px 25px -5px rgba(0,0,0,.05),
-                0 8px 10px -6px rgba(0,0,0,.05);
+                0 10px 25px -5px rgba(0, 0, 0, .05),
+                0 8px 10px -6px rgba(0, 0, 0, .05);
         }
 
         .total-line {
@@ -235,12 +410,14 @@
             color: var(--primary);
         }
 
-        /* =========================
-           MOBILE
-        ========================= */
+        .app-footer {
+            text-align: center;
+            padding: 10px 15px 20px;
+            color: #64748b;
+            font-size: 12px;
+        }
 
         @media (max-width: 480px) {
-
             .app-container {
                 padding: 12px;
             }
@@ -250,180 +427,1143 @@
             }
 
             .item-row {
-                grid-template-columns:
-                    minmax(0, 1fr) 100px;
+                grid-template-columns: minmax(0, 1fr) 100px;
             }
 
             .total-value {
                 font-size: 22px;
             }
         }
-
     </style>
-
 </head>
 
 <body>
 
-    <header>
+    <!-- ==============================
+         LOGIN
+    ============================== -->
 
-        <h1>OrçaPrático</h1>
+    <div id="loginScreen">
 
-    </header>
-<footer style="text-align:center; padding:10px 15px 20px; color:#64748b; font-size:12px;">
-    Desenvolvido por Adilson Colombo
-</footer>
+        <div class="login-container">
 
-    <main class="app-container">
+            <div class="login-card">
 
+                <div class="login-logo">
+                    O
+                </div>
 
-        <!-- =========================
-             CLIENTE
-        ========================== -->
+                <div class="login-title">
+                    OrçaPrático
+                </div>
 
-        <section class="card">
+                <div class="login-subtitle">
+                    Entre para acessar seu aplicativo
+                </div>
 
-            <div class="card-title">
-                Dados do cliente
-            </div>
+                <div class="login-field">
 
-            <div class="field">
-
-                <label for="clientName">
-                    Nome do cliente
-                </label>
-
-                <input
-                    type="text"
-                    id="clientName"
-                    placeholder="Digite o nome"
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label for="clientPhone">
-                    Telefone
-                </label>
-
-                <input
-                    type="tel"
-                    id="clientPhone"
-                    placeholder="Digite o telefone"
-                >
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================
-             ITENS
-        ========================== -->
-
-        <section class="card">
-
-            <div class="card-title">
-                Itens do orçamento
-            </div>
-
-
-            <div id="itemsContainer">
-
-                <div class="item-row">
+                    <label for="loginEmail">
+                        E-mail
+                    </label>
 
                     <input
-                        type="text"
-                        class="item-desc"
-                        placeholder="Descrição"
-                    >
-
-                    <input
-                        type="text"
-                        inputmode="decimal"
-                        class="item-price"
-                        placeholder="R$ 0,00"
+                        type="email"
+                        id="loginEmail"
+                        placeholder="Digite seu e-mail"
+                        autocomplete="email"
                     >
 
                 </div>
 
+                <div class="login-field">
+
+                    <label for="loginPassword">
+                        Senha
+                    </label>
+
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        placeholder="Digite sua senha"
+                        autocomplete="current-password"
+                    >
+
+                </div>
+
+                <button
+                    type="button"
+                    id="loginBtn"
+                    class="btn-login"
+                >
+                    Entrar
+                </button>
+
+                <button
+                    type="button"
+                    id="registerBtn"
+                    class="btn-register"
+                >
+                 
+                Criar nova conta
+                </button>
+
+                <button
+    type="button"
+    id="forgotPasswordBtn"
+    class="btn-forgot"
+>
+    Esqueci minha senha
+</button>
+                <div
+                    id="loginMessage"
+                    class="login-message"
+                ></div>
+
+                <div class="login-footer">
+                    Desenvolvido por Adilson Colombo
+                </div>
+
             </div>
 
+        </div>
 
-            <button
-                type="button"
-                id="addItemBtn"
-                class="btn-add"
-            >
-                + Adicionar item
-            </button>
-
-        </section>
+    </div>
 
 
-        <!-- =========================
-             TOTAL
-        ========================== -->
+    <!-- ==============================
+         REDEFINIR SENHA
+    ============================== -->
 
-        <section class="total-card">
+    <div id="resetScreen">
 
-            <div class="total-line">
+        <div class="login-container">
 
-                <span class="total-label">
-                    TOTAL
-                </span>
+            <div class="login-card">
+
+                <div class="login-logo">
+                    O
+                </div>
+
+                <div class="login-title">
+                    Nova senha
+                </div>
+
+                <div class="login-subtitle">
+                    Digite sua nova senha abaixo
+                </div>
+
+                <div class="login-field">
+
+                    <label for="newPassword">
+                        Nova senha
+                    </label>
+
+                    <input
+                        type="password"
+                        id="newPassword"
+                        placeholder="Digite a nova senha"
+                        autocomplete="new-password"
+                    >
+
+                </div>
+
+                <div class="login-field">
+
+                    <label for="newPasswordConfirm">
+                        Confirmar nova senha
+                    </label>
+
+                    <input
+                        type="password"
+                        id="newPasswordConfirm"
+                        placeholder="Digite novamente"
+                        autocomplete="new-password"
+                    >
+
+                </div>
+
+                <button
+                    type="button"
+                    id="saveNewPasswordBtn"
+                    class="btn-reset"
+                >
+                    Salvar nova senha
+                </button>
+
+                <button
+                    type="button"
+                    id="backToLoginBtn"
+                    class="btn-back"
+                >
+                    Voltar para o login
+                </button>
+
+                <div
+                    id="resetMessage"
+                    class="login-message"
+                ></div>
+
+                <div class="login-footer">
+                    Desenvolvido por Adilson Colombo
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==============================
+         APLICATIVO
+    ============================== -->
+
+    <div id="appScreen">
+
+        <header>
+
+            <h1>
+                OrçaPrático
+            </h1>
+
+            <div class="user-bar">
 
                 <span
-                    class="total-value"
-                    id="totalValue"
+                    id="userEmail"
+                    class="user-email"
+                ></span>
+
+                <button
+                    type="button"
+                    id="logoutBtn"
+                    class="btn-logout"
                 >
-                    R$ 0,00
-                </span>
+                    Sair
+                </button>
 
             </div>
 
-
-            <button
-                type="button"
-                id="generatePdfBtn"
-                class="btn-pdf"
-            >
-                📄 Gerar PDF
-            </button>
-
-        </section>
-
-    </main>
+        </header>
 
 
-    <!-- =====================================================
+        <main class="app-container">
+
+            <!-- CLIENTE -->
+
+            <section class="card">
+
+                <div class="card-title">
+                    Dados do cliente
+                </div>
+
+                <div class="field">
+
+                    <label for="clientName">
+                        Nome do cliente
+                    </label>
+
+                    <input
+                        type="text"
+                        id="clientName"
+                        placeholder="Digite o nome"
+                    >
+
+                </div>
+
+                <div class="field">
+
+                    <label for="clientPhone">
+                        Telefone
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="clientPhone"
+                        placeholder="Digite o telefone"
+                    >
+
+                </div>
+
+            </section>
+
+
+            <!-- ITENS -->
+
+            <section class="card">
+
+                <div class="card-title">
+                    Itens do orçamento
+                </div>
+
+                <div id="itemsContainer">
+
+                    <div class="item-row">
+
+                        <input
+                            type="text"
+                            class="item-desc"
+                            placeholder="Descrição"
+                        >
+
+                        <input
+                            type="text"
+                            inputmode="decimal"
+                            class="item-price"
+                            placeholder="R$ 0,00"
+                        >
+
+                    </div>
+
+                </div>
+
+                <button
+                    type="button"
+                    id="addItemBtn"
+                    class="btn-add"
+                >
+                    + Adicionar item
+                </button>
+
+            </section>
+
+
+            <!-- TOTAL -->
+
+            <section class="total-card">
+
+                <div class="total-line">
+
+                    <span class="total-label">
+                        TOTAL
+                    </span>
+
+                    <span
+                        class="total-value"
+                        id="totalValue"
+                    >
+                        R$ 0,00
+                    </span>
+
+                </div>
+
+                <button
+                    type="button"
+                    id="generatePdfBtn"
+                    class="btn-pdf"
+                >
+                    📄 Gerar PDF
+                </button>
+
+            </section>
+
+        </main>
+
+
+        <footer class="app-footer">
+            Desenvolvido por Adilson Colombo
+        </footer>
+
+    </div>
+
+
+    <!-- ==============================
          JAVASCRIPT
-    ===================================================== -->
+    ============================== -->
 
     <script>
 
-        // =====================================================
-        // ELEMENTOS
-        // =====================================================
+        /* ==============================
+           SUPABASE
+        ============================== */
+
+        const SUPABASE_URL =
+            'https://piarcjqbhuzsqvgtwnmh.supabase.co';
+
+        const SUPABASE_PUBLISHABLE_KEY =
+            'sb_publishable_6X6s8W8AQdFq5kGfdCyqIw_Hgay9g9s';
+
+        const {
+            createClient
+        } = window.supabase;
+
+        const supabaseClient =
+            createClient(
+                SUPABASE_URL,
+                SUPABASE_PUBLISHABLE_KEY
+            );
+
+
+        /* ==============================
+           ELEMENTOS
+        ============================== */
+
+        const loginScreen =
+            document.getElementById('loginScreen');
+
+        const resetScreen =
+            document.getElementById('resetScreen');
+
+        const appScreen =
+            document.getElementById('appScreen');
+
+        const loginEmail =
+            document.getElementById('loginEmail');
+
+        const loginPassword =
+            document.getElementById('loginPassword');
+
+        const loginBtn =
+            document.getElementById('loginBtn');
+
+        const registerBtn =
+    document.getElementById('registerBtn');
+const forgotPasswordBtn =
+    document.getElementById('forgotPasswordBtn');
+const logoutBtn =
+    document.getElementById('logoutBtn');
+            
+
+        const userEmail =
+            document.getElementById('userEmail');
+
+        const loginMessage =
+            document.getElementById('loginMessage');
+
+        const newPassword =
+            document.getElementById('newPassword');
+
+        const newPasswordConfirm =
+            document.getElementById('newPasswordConfirm');
+
+        const saveNewPasswordBtn =
+            document.getElementById('saveNewPasswordBtn');
+
+        const backToLoginBtn =
+            document.getElementById('backToLoginBtn');
+
+        const resetMessage =
+            document.getElementById('resetMessage');
+
+
+        /* ==============================
+           MENSAGENS
+        ============================== */
+
+        function showLoginMessage(
+            message,
+            type = 'error'
+        ) {
+            loginMessage.textContent = message;
+            loginMessage.className =
+                'login-message ' + type;
+        }
+
+        function clearLoginMessage() {
+            loginMessage.textContent = '';
+            loginMessage.className =
+                'login-message';
+        }
+
+        function showResetMessage(
+            message,
+            type = 'error'
+        ) {
+            resetMessage.textContent = message;
+            resetMessage.className =
+                'login-message ' + type;
+        }
+
+
+        /* ==============================
+           MOSTRAR APP
+        ============================== */
+
+        function showApp(session) {
+
+            if (!session || !session.user) {
+                return;
+            }
+
+            loginScreen.style.display = 'none';
+            resetScreen.style.display = 'none';
+            appScreen.style.display = 'block';
+
+            userEmail.textContent =
+                session.user.email || '';
+        }
+
+
+        /* ==============================
+           MOSTRAR LOGIN
+        ============================== */
+
+        function showLogin() {
+
+            loginScreen.style.display = 'flex';
+            resetScreen.style.display = 'none';
+            appScreen.style.display = 'none';
+
+            userEmail.textContent = '';
+        }
+
+
+        /* ==============================
+           MOSTRAR REDEFINIÇÃO
+        ============================== */
+
+        function showResetPassword() {
+
+            loginScreen.style.display = 'none';
+            resetScreen.style.display = 'flex';
+            appScreen.style.display = 'none';
+
+            newPassword.value = '';
+            newPasswordConfirm.value = '';
+            resetMessage.textContent = '';
+            resetMessage.className =
+                'login-message';
+        }
+
+
+        /* ==============================
+           VERIFICAR SESSÃO
+        ============================== */
+
+        async function checkSession() {
+
+            try {
+
+                const {
+                    data,
+                    error
+                } =
+                    await supabaseClient
+                        .auth
+                        .getSession();
+
+                if (error) {
+
+                    console.error(
+                        'Erro ao verificar sessão:',
+                        error
+                    );
+
+                    showLogin();
+
+                    return;
+                }
+
+                /*
+                 * Se o link de recuperação estiver
+                 * sendo processado, não abrimos o app.
+                 * A tela de nova senha será mostrada
+                 * pelo evento PASSWORD_RECOVERY.
+                 */
+
+                const hash =
+                    window.location.hash;
+
+                const isRecovery =
+                    hash.includes('type=recovery');
+
+                if (isRecovery) {
+
+                    showResetPassword();
+
+                    return;
+                }
+
+                if (
+                    data &&
+                    data.session
+                ) {
+
+                    showApp(
+                        data.session
+                    );
+
+                } else {
+
+                    showLogin();
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    'Erro:',
+                    error
+                );
+
+                showLogin();
+            }
+        }
+
+
+        /* ==============================
+           LOGIN
+        ============================== */
+
+        loginBtn.addEventListener(
+            'click',
+            async () => {
+
+                clearLoginMessage();
+
+                const email =
+                    loginEmail.value.trim();
+
+                const password =
+                    loginPassword.value;
+
+                if (!email) {
+
+                    showLoginMessage(
+                        'Digite seu e-mail.'
+                    );
+
+                    return;
+                }
+
+                if (!password) {
+
+                    showLoginMessage(
+                        'Digite sua senha.'
+                    );
+
+                    return;
+                }
+
+                loginBtn.disabled = true;
+
+                loginBtn.textContent =
+                    'Entrando...';
+
+                try {
+
+                    const {
+                        data,
+                        error
+                    } =
+                        await supabaseClient
+                            .auth
+                            .signInWithPassword({
+                                email: email,
+                                password: password
+                            });
+
+                    if (error) {
+
+                        console.error(
+                            'Erro no login:',
+                            error
+                        );
+
+                        showLoginMessage(
+                            'E-mail ou senha incorretos.'
+                        );
+
+                        return;
+                    }
+
+                    if (
+                        data &&
+                        data.session
+                    ) {
+
+                        showApp(
+                            data.session
+                        );
+                    }
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    showLoginMessage(
+                        'Não foi possível entrar. Tente novamente.'
+                    );
+
+                } finally {
+
+                    loginBtn.disabled =
+                        false;
+
+                    loginBtn.textContent =
+                        'Entrar';
+                }
+            }
+        );
+/* ==============================
+   ESQUECI MINHA SENHA
+============================== */
+
+forgotPasswordBtn.addEventListener(
+    'click',
+    async () => {
+
+        clearLoginMessage();
+
+        const email =
+            loginEmail.value.trim();
+
+        if (!email) {
+            showLoginMessage(
+                'Digite seu e-mail para recuperar a senha.'
+            );
+            return;
+        }
+
+        forgotPasswordBtn.disabled = true;
+
+        forgotPasswordBtn.textContent =
+            'Enviando...';
+
+        try {
+
+            const {
+                error
+            } = await supabaseClient
+                .auth
+                .resetPasswordForEmail(
+                    email,
+                    {
+                        redirectTo:
+                            window.location.origin +
+                            window.location.pathname
+                    }
+                );
+
+            if (error) {
+
+                console.error(
+                    'Erro ao recuperar senha:',
+                    error
+                );
+
+                showLoginMessage(
+                    error.message
+                );
+
+                return;
+            }
+
+            showLoginMessage(
+                'Enviamos um link para seu e-mail. Verifique também a caixa de spam.',
+                'success'
+            );
+
+        } catch (error) {
+
+            console.error(error);
+
+            showLoginMessage(
+                'Não foi possível enviar o link de recuperação.'
+            );
+
+        } finally {
+
+            forgotPasswordBtn.disabled =
+                false;
+
+            forgotPasswordBtn.textContent =
+                'Esqueci minha senha';
+        }
+    }
+);
+
+        /* ==============================
+           CRIAR CONTA
+        ============================== */
+
+        registerBtn.addEventListener(
+            'click',
+            async () => {
+
+                clearLoginMessage();
+
+                const email =
+                    loginEmail.value.trim();
+
+                const password =
+                    loginPassword.value;
+
+                if (!email) {
+
+                    showLoginMessage(
+                        'Digite o e-mail que deseja usar.'
+                    );
+
+                    return;
+                }
+
+                if (!password) {
+
+                    showLoginMessage(
+                        'Digite uma senha.'
+                    );
+
+                    return;
+                }
+
+                if (password.length < 6) {
+
+                    showLoginMessage(
+                        'A senha precisa ter pelo menos 6 caracteres.'
+                    );
+
+                    return;
+                }
+
+                registerBtn.disabled =
+                    true;
+
+                registerBtn.textContent =
+                    'Criando conta...';
+
+                try {
+
+                    const {
+                        data,
+                        error
+                    } =
+                        await supabaseClient
+                            .auth
+                            .signUp({
+                                email: email,
+                                password: password
+                            });
+
+                    if (error) {
+
+                        console.error(
+                            'Erro ao criar conta:',
+                            error
+                        );
+
+                        showLoginMessage(
+                            error.message
+                        );
+
+                        return;
+                    }
+
+                    if (
+                        data &&
+                        data.session
+                    ) {
+
+                        showApp(
+                            data.session
+                        );
+
+                    } else {
+
+                        showLoginMessage(
+                            'Conta criada. Agora faça o login.',
+                            'success'
+                        );
+                    }
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    showLoginMessage(
+                        'Não foi possível criar a conta.'
+                    );
+
+                } finally {
+
+                    registerBtn.disabled =
+                        false;
+
+                    registerBtn.textContent =
+                        'Criar nova conta';
+                }
+            }
+        );
+
+
+        /* ==============================
+           SALVAR NOVA SENHA
+        ============================== */
+
+        saveNewPasswordBtn.addEventListener(
+            'click',
+            async () => {
+
+                showResetMessage('');
+
+                const password =
+                    newPassword.value;
+
+                const confirmation =
+                    newPasswordConfirm.value;
+
+                if (!password) {
+
+                    showResetMessage(
+                        'Digite a nova senha.'
+                    );
+
+                    return;
+                }
+
+                if (password.length < 6) {
+
+                    showResetMessage(
+                        'A senha precisa ter pelo menos 6 caracteres.'
+                    );
+
+                    return;
+                }
+
+                if (password !== confirmation) {
+
+                    showResetMessage(
+                        'As senhas não são iguais.'
+                    );
+
+                    return;
+                }
+
+                saveNewPasswordBtn.disabled =
+                    true;
+
+                saveNewPasswordBtn.textContent =
+                    'Salvando...';
+
+                try {
+
+                    const {
+                        data,
+                        error
+                    } =
+                        await supabaseClient
+                            .auth
+                            .updateUser({
+                                password: password
+                            });
+
+                    if (error) {
+
+                        console.error(
+                            'Erro ao alterar senha:',
+                            error
+                        );
+
+                        showResetMessage(
+                            error.message
+                        );
+
+                        return;
+                    }
+
+                    showResetMessage(
+                        'Senha alterada com sucesso!',
+                        'success'
+                    );
+
+                    /*
+                     * Depois de alterar a senha,
+                     * encerramos a sessão e voltamos
+                     * para o login.
+                     */
+
+                    setTimeout(
+                        async () => {
+
+                            await supabaseClient
+                                .auth
+                                .signOut();
+
+                            window.location.hash = '';
+
+                            loginEmail.value = '';
+                            loginPassword.value = '';
+
+                            showLogin();
+
+                            showLoginMessage(
+                                'Senha alterada. Agora entre com sua nova senha.',
+                                'success'
+                            );
+
+                        },
+                        1500
+                    );
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    showResetMessage(
+                        'Não foi possível alterar a senha.'
+                    );
+
+                } finally {
+
+                    saveNewPasswordBtn.disabled =
+                        false;
+
+                    saveNewPasswordBtn.textContent =
+                        'Salvar nova senha';
+                }
+            }
+        );
+
+
+        /* ==============================
+           VOLTAR PARA LOGIN
+        ============================== */
+
+        backToLoginBtn.addEventListener(
+            'click',
+            async () => {
+
+                window.location.hash = '';
+
+                await supabaseClient
+                    .auth
+                    .signOut();
+
+                showLogin();
+            }
+        );
+
+
+        /* ==============================
+           SAIR
+        ============================== */
+
+        logoutBtn.addEventListener(
+            'click',
+            async () => {
+
+                try {
+
+                    const {
+                        error
+                    } =
+                        await supabaseClient
+                            .auth
+                            .signOut();
+
+                    if (error) {
+
+                        console.error(
+                            'Erro ao sair:',
+                            error
+                        );
+
+                        return;
+                    }
+
+                    loginEmail.value = '';
+                    loginPassword.value = '';
+
+                    clearLoginMessage();
+
+                    showLogin();
+
+                } catch (error) {
+
+                    console.error(error);
+                }
+            }
+        );
+
+
+        /* ==============================
+           OBSERVAR AUTENTICAÇÃO
+        ============================== */
+
+        supabaseClient
+            .auth
+            .onAuthStateChange(
+                (
+                    event,
+                    session
+                ) => {
+
+                    /*
+                     * ESTE É O PONTO PRINCIPAL
+                     * DA RECUPERAÇÃO DE SENHA.
+                     */
+
+                    if (
+                        event ===
+                        'PASSWORD_RECOVERY'
+                    ) {
+
+                        showResetPassword();
+
+                        return;
+                    }
+
+                    /*
+                     * Se estivermos na tela de
+                     * recuperação, não devemos
+                     * abrir o aplicativo.
+                     */
+
+                    if (
+                        resetScreen.style.display ===
+                        'flex'
+                    ) {
+
+                        return;
+                    }
+
+                    if (session) {
+
+                        showApp(session);
+
+                    } else {
+
+                        showLogin();
+                    }
+                }
+            );
+
+
+        /* ==============================
+           INICIAR
+        ============================== */
+
+        checkSession();
+
+
+        /* ==============================
+           ELEMENTOS DO ORÇAMENTO
+        ============================== */
 
         const itemsContainer =
-            document.getElementById('itemsContainer');
+            document.getElementById(
+                'itemsContainer'
+            );
 
         const addItemBtn =
-            document.getElementById('addItemBtn');
+            document.getElementById(
+                'addItemBtn'
+            );
 
         const totalValue =
-            document.getElementById('totalValue');
+            document.getElementById(
+                'totalValue'
+            );
 
         const generatePdfBtn =
-            document.getElementById('generatePdfBtn');
+            document.getElementById(
+                'generatePdfBtn'
+            );
 
 
-        // =====================================================
-        // CONVERTER DINHEIRO
-        // =====================================================
+        /* ==============================
+           CONVERTER DINHEIRO
+        ============================== */
 
         function parseMoney(value) {
 
@@ -431,19 +1571,12 @@
                 return 0;
             }
 
-            let text = String(value).trim();
+            let text =
+                String(value).trim();
 
             text = text
                 .replace(/R\$/gi, '')
                 .replace(/\s/g, '');
-
-            /*
-             * Exemplos:
-             *
-             * 100,50
-             * 1.000,50
-             * 1000.50
-             */
 
             if (
                 text.includes('.') &&
@@ -456,8 +1589,8 @@
 
             } else {
 
-                text = text.replace(',', '.');
-
+                text =
+                    text.replace(',', '.');
             }
 
             const number =
@@ -469,9 +1602,9 @@
         }
 
 
-        // =====================================================
-        // FORMATAR DINHEIRO
-        // =====================================================
+        /* ==============================
+           FORMATAR DINHEIRO
+        ============================== */
 
         function formatMoney(value) {
 
@@ -485,9 +1618,9 @@
         }
 
 
-        // =====================================================
-        // CALCULAR TOTAL
-        // =====================================================
+        /* ==============================
+           CALCULAR TOTAL
+        ============================== */
 
         function calculateTotal() {
 
@@ -498,23 +1631,27 @@
 
             let total = 0;
 
-            prices.forEach(input => {
+            prices.forEach(
+                input => {
 
-                total +=
-                    parseMoney(input.value);
-
-            });
+                    total +=
+                        parseMoney(
+                            input.value
+                        );
+                }
+            );
 
             totalValue.textContent =
-                'R$ ' + formatMoney(total);
+                'R$ ' +
+                formatMoney(total);
 
             return total;
         }
 
 
-        // =====================================================
-        // EVENTO DE PREÇO
-        // =====================================================
+        /* ==============================
+           EVENTO DE PREÇO
+        ============================== */
 
         function attachPriceEvent(input) {
 
@@ -523,15 +1660,14 @@
                 () => {
 
                     calculateTotal();
-
                 }
             );
         }
 
 
-        // =====================================================
-        // REMOVER ITEM
-        // =====================================================
+        /* ==============================
+           REMOVER ITEM
+        ============================== */
 
         function attachRemoveEvent(
             button,
@@ -545,22 +1681,23 @@
                     row.remove();
 
                     calculateTotal();
-
                 }
             );
         }
 
 
-        // =====================================================
-        // ADICIONAR ITEM
-        // =====================================================
+        /* ==============================
+           ADICIONAR ITEM
+        ============================== */
 
         addItemBtn.addEventListener(
             'click',
             () => {
 
                 const row =
-                    document.createElement('div');
+                    document.createElement(
+                        'div'
+                    );
 
                 row.className =
                     'item-row';
@@ -591,8 +1728,9 @@
                     </div>
                 `;
 
-                itemsContainer.appendChild(row);
-
+                itemsContainer.appendChild(
+                    row
+                );
 
                 const priceInput =
                     row.querySelector(
@@ -602,7 +1740,6 @@
                 attachPriceEvent(
                     priceInput
                 );
-
 
                 const removeButton =
                     row.querySelector(
@@ -614,16 +1751,14 @@
                     row
                 );
 
-
                 calculateTotal();
-
             }
         );
 
 
-        // =====================================================
-        // PRIMEIRO ITEM
-        // =====================================================
+        /* ==============================
+           PRIMEIRO ITEM
+        ============================== */
 
         const firstPrice =
             document.querySelector(
@@ -635,19 +1770,15 @@
         );
 
 
-        // =====================================================
-        // GERAR PDF
-        // =====================================================
+        /* ==============================
+           GERAR PDF
+        ============================== */
 
         generatePdfBtn.addEventListener(
             'click',
             () => {
 
                 try {
-
-                    // -----------------------------------------
-                    // CLIENTE
-                    // -----------------------------------------
 
                     const clientName =
                         document
@@ -657,7 +1788,6 @@
                             .value
                             .trim();
 
-
                     const clientPhone =
                         document
                             .getElementById(
@@ -665,7 +1795,6 @@
                             )
                             .value
                             .trim();
-
 
                     if (!clientName) {
 
@@ -675,11 +1804,6 @@
 
                         return;
                     }
-
-
-                    // -----------------------------------------
-                    // VERIFICAR BIBLIOTECA
-                    // -----------------------------------------
 
                     if (
                         typeof window.jspdf ===
@@ -694,30 +1818,16 @@
                         return;
                     }
 
-
-                    // -----------------------------------------
-                    // CRIAR PDF A4
-                    // -----------------------------------------
-
                     const {
                         jsPDF
                     } = window.jspdf;
 
-
                     const doc =
                         new jsPDF({
-                            orientation:
-                                'portrait',
-                            unit:
-                                'mm',
-                            format:
-                                'a4'
+                            orientation: 'portrait',
+                            unit: 'mm',
+                            format: 'a4'
                         });
-
-
-                    // -----------------------------------------
-                    // TAMANHO DA PÁGINA
-                    // -----------------------------------------
 
                     const pageWidth =
                         doc.internal.pageSize.getWidth();
@@ -725,26 +1835,21 @@
                     const pageHeight =
                         doc.internal.pageSize.getHeight();
 
-
                     const marginLeft = 18;
                     const marginRight = 18;
                     const marginTop = 18;
                     const marginBottom = 18;
-
 
                     const contentWidth =
                         pageWidth -
                         marginLeft -
                         marginRight;
 
-
                     let y =
                         marginTop;
 
 
-                    // -----------------------------------------
-                    // TÍTULO
-                    // -----------------------------------------
+                    /* TÍTULO */
 
                     doc.setFont(
                         'helvetica',
@@ -765,9 +1870,7 @@
                         y
                     );
 
-
                     y += 5;
-
 
                     doc.setDrawColor(
                         7,
@@ -782,18 +1885,14 @@
                     doc.line(
                         marginLeft,
                         y,
-                        pageWidth -
-                            marginRight,
+                        pageWidth - marginRight,
                         y
                     );
-
 
                     y += 12;
 
 
-                    // -----------------------------------------
-                    // DADOS CLIENTE
-                    // -----------------------------------------
+                    /* CLIENTE */
 
                     doc.setFontSize(11);
 
@@ -802,7 +1901,6 @@
                         40,
                         40
                     );
-
 
                     doc.setFont(
                         'helvetica',
@@ -815,7 +1913,6 @@
                         y
                     );
 
-
                     doc.setFont(
                         'helvetica',
                         'normal'
@@ -827,9 +1924,7 @@
                         y
                     );
 
-
                     y += 7;
-
 
                     doc.setFont(
                         'helvetica',
@@ -841,7 +1936,6 @@
                         marginLeft,
                         y
                     );
-
 
                     doc.setFont(
                         'helvetica',
@@ -855,9 +1949,7 @@
                         y
                     );
 
-
                     y += 7;
-
 
                     doc.setFont(
                         'helvetica',
@@ -869,7 +1961,6 @@
                         marginLeft,
                         y
                     );
-
 
                     doc.setFont(
                         'helvetica',
@@ -885,29 +1976,21 @@
                         y
                     );
 
-
                     y += 13;
 
 
-                    // -----------------------------------------
-                    // LARGURA DA TABELA
-                    // -----------------------------------------
+                    /* TABELA */
 
-                    const priceWidth =
-                        42;
+                    const priceWidth = 42;
 
                     const descriptionWidth =
                         contentWidth -
                         priceWidth;
 
-
-                    const headerHeight =
-                        10;
+                    const headerHeight = 10;
 
 
-                    // -----------------------------------------
-                    // CABEÇALHO TABELA
-                    // -----------------------------------------
+                    /* CABEÇALHO */
 
                     doc.setFillColor(
                         241,
@@ -921,7 +2004,6 @@
                         210
                     );
 
-
                     doc.rect(
                         marginLeft,
                         y,
@@ -930,25 +2012,21 @@
                         'FD'
                     );
 
-
                     doc.rect(
                         marginLeft +
-                            descriptionWidth,
+                        descriptionWidth,
                         y,
                         priceWidth,
                         headerHeight,
                         'FD'
                     );
 
-
                     doc.setFont(
                         'helvetica',
                         'bold'
                     );
 
-                    doc.setFontSize(
-                        10
-                    );
+                    doc.setFontSize(10);
 
                     doc.setTextColor(
                         40,
@@ -956,42 +2034,35 @@
                         40
                     );
 
-
                     doc.text(
                         'Descrição',
                         marginLeft + 3,
                         y + 6.5
                     );
 
-
                     doc.text(
                         'Valor',
                         marginLeft +
-                            descriptionWidth +
-                            priceWidth -
-                            3,
+                        descriptionWidth +
+                        priceWidth -
+                        3,
                         y + 6.5,
                         {
                             align: 'right'
                         }
                     );
 
-
                     y += headerHeight;
 
 
-                    // -----------------------------------------
-                    // PEGAR ITENS
-                    // -----------------------------------------
+                    /* ITENS */
 
                     const rows =
                         document.querySelectorAll(
                             '#itemsContainer .item-row'
                         );
 
-
                     let totalFinal = 0;
-
 
                     rows.forEach(
                         (row, index) => {
@@ -1001,41 +2072,22 @@
                                     '.item-desc'
                                 );
 
-
                             const priceInput =
                                 row.querySelector(
                                     '.item-price'
                                 );
-
 
                             const desc =
                                 descInput.value.trim() ||
                                 'Item ' +
                                 (index + 1);
 
-
                             const price =
                                 parseMoney(
                                     priceInput.value
                                 );
 
-
-                            totalFinal +=
-                                price;
-
-
-                            // -----------------------------
-                            // TEXTO DA DESCRIÇÃO
-                            // -----------------------------
-
-                            doc.setFont(
-                                'helvetica',
-                                'normal'
-                            );
-
-                            doc.setFontSize(
-                                10
-                            );
+                            totalFinal += price;
 
 
                             const lines =
@@ -1044,7 +2096,6 @@
                                     descriptionWidth - 6
                                 );
 
-
                             const rowHeight =
                                 Math.max(
                                     10,
@@ -1052,9 +2103,7 @@
                                 );
 
 
-                            // -----------------------------
-                            // VERIFICAR ESPAÇO
-                            // -----------------------------
+                            /* NOVA PÁGINA */
 
                             if (
                                 y +
@@ -1069,15 +2118,12 @@
                                 y =
                                     marginTop;
 
-
                                 doc.setFont(
                                     'helvetica',
                                     'bold'
                                 );
 
-                                doc.setFontSize(
-                                    12
-                                );
+                                doc.setFontSize(12);
 
                                 doc.setTextColor(
                                     7,
@@ -1091,12 +2137,8 @@
                                     y
                                 );
 
-
                                 y += 8;
 
-
-                                // Novo cabeçalho
-                                // da tabela
 
                                 doc.setFillColor(
                                     241,
@@ -1110,7 +2152,6 @@
                                     210
                                 );
 
-
                                 doc.rect(
                                     marginLeft,
                                     y,
@@ -1119,25 +2160,21 @@
                                     'FD'
                                 );
 
-
                                 doc.rect(
                                     marginLeft +
-                                        descriptionWidth,
+                                    descriptionWidth,
                                     y,
                                     priceWidth,
                                     headerHeight,
                                     'FD'
                                 );
 
-
                                 doc.setFont(
                                     'helvetica',
                                     'bold'
                                 );
 
-                                doc.setFontSize(
-                                    10
-                                );
+                                doc.setFontSize(10);
 
                                 doc.setTextColor(
                                     40,
@@ -1145,43 +2182,35 @@
                                     40
                                 );
 
-
                                 doc.text(
                                     'Descrição',
                                     marginLeft + 3,
                                     y + 6.5
                                 );
 
-
                                 doc.text(
                                     'Valor',
                                     marginLeft +
-                                        descriptionWidth +
-                                        priceWidth -
-                                        3,
+                                    descriptionWidth +
+                                    priceWidth -
+                                    3,
                                     y + 6.5,
                                     {
                                         align: 'right'
                                     }
                                 );
 
-
-                                y +=
-                                    headerHeight;
-
+                                y += headerHeight;
                             }
 
 
-                            // -----------------------------
-                            // BORDAS
-                            // -----------------------------
+                            /* BORDAS */
 
                             doc.setDrawColor(
                                 220,
                                 220,
                                 220
                             );
-
 
                             doc.rect(
                                 marginLeft,
@@ -1190,35 +2219,29 @@
                                 rowHeight
                             );
 
-
                             doc.rect(
                                 marginLeft +
-                                    descriptionWidth,
+                                descriptionWidth,
                                 y,
                                 priceWidth,
                                 rowHeight
                             );
 
 
-                            // -----------------------------
-                            // DESCRIÇÃO
-                            // -----------------------------
+                            /* DESCRIÇÃO */
 
                             doc.setFont(
                                 'helvetica',
                                 'normal'
                             );
 
-                            doc.setFontSize(
-                                10
-                            );
+                            doc.setFontSize(10);
 
                             doc.setTextColor(
                                 50,
                                 50,
                                 50
                             );
-
 
                             doc.text(
                                 lines,
@@ -1227,40 +2250,30 @@
                             );
 
 
-                            // -----------------------------
-                            // VALOR
-                            // -----------------------------
+                            /* VALOR */
 
                             const priceText =
                                 'R$ ' +
-                                formatMoney(
-                                    price
-                                );
-
+                                formatMoney(price);
 
                             doc.text(
                                 priceText,
                                 marginLeft +
-                                    descriptionWidth +
-                                    priceWidth -
-                                    3,
+                                descriptionWidth +
+                                priceWidth -
+                                3,
                                 y + 6,
                                 {
                                     align: 'right'
                                 }
                             );
 
-
-                            y +=
-                                rowHeight;
-
+                            y += rowHeight;
                         }
                     );
 
 
-                    // -----------------------------------------
-                    // TOTAL
-                    // -----------------------------------------
+                    /* TOTAL */
 
                     if (
                         y + 20 >
@@ -1272,16 +2285,11 @@
 
                         y =
                             marginTop;
-
                     }
-
 
                     y += 8;
 
-
-                    const totalHeight =
-                        12;
-
+                    const totalHeight = 12;
 
                     doc.setFillColor(
                         248,
@@ -1295,7 +2303,6 @@
                         210
                     );
 
-
                     doc.rect(
                         marginLeft,
                         y,
@@ -1304,25 +2311,21 @@
                         'FD'
                     );
 
-
                     doc.rect(
                         marginLeft +
-                            descriptionWidth,
+                        descriptionWidth,
                         y,
                         priceWidth,
                         totalHeight,
                         'FD'
                     );
 
-
                     doc.setFont(
                         'helvetica',
                         'bold'
                     );
 
-                    doc.setFontSize(
-                        12
-                    );
+                    doc.setFontSize(12);
 
                     doc.setTextColor(
                         40,
@@ -1330,13 +2333,11 @@
                         40
                     );
 
-
                     doc.text(
                         'TOTAL',
                         marginLeft + 3,
                         y + 8
                     );
-
 
                     doc.setTextColor(
                         7,
@@ -1344,16 +2345,13 @@
                         255
                     );
 
-
                     doc.text(
                         'R$ ' +
-                        formatMoney(
-                            totalFinal
-                        ),
+                        formatMoney(totalFinal),
                         marginLeft +
-                            descriptionWidth +
-                            priceWidth -
-                            3,
+                        descriptionWidth +
+                        priceWidth -
+                        3,
                         y + 8,
                         {
                             align: 'right'
@@ -1361,14 +2359,11 @@
                     );
 
 
-                    // -----------------------------------------
-                    // RODAPÉ
-                    // -----------------------------------------
+                    /* RODAPÉ */
 
                     const pageCount =
                         doc.internal
                             .getNumberOfPages();
-
 
                     for (
                         let page = 1;
@@ -1376,19 +2371,14 @@
                         page++
                     ) {
 
-                        doc.setPage(
-                            page
-                        );
-
+                        doc.setPage(page);
 
                         doc.setFont(
                             'helvetica',
                             'normal'
                         );
 
-                        doc.setFontSize(
-                            8
-                        );
+                        doc.setFontSize(8);
 
                         doc.setTextColor(
                             130,
@@ -1396,13 +2386,11 @@
                             130
                         );
 
-
                         doc.text(
                             'Orçamento gerado pelo OrçaPrático',
                             marginLeft,
                             pageHeight - 9
                         );
-
 
                         doc.text(
                             'Página ' +
@@ -1410,19 +2398,16 @@
                             ' de ' +
                             pageCount,
                             pageWidth -
-                                marginRight,
+                            marginRight,
                             pageHeight - 9,
                             {
                                 align: 'right'
                             }
                         );
-
                     }
 
 
-                    // -----------------------------------------
-                    // NOME DO ARQUIVO
-                    // -----------------------------------------
+                    /* NOME DO ARQUIVO */
 
                     const safeName =
                         clientName
@@ -1435,21 +2420,15 @@
                                 '_'
                             );
 
-
                     const fileName =
                         'Orcamento_' +
                         safeName +
                         '.pdf';
 
 
-                    // -----------------------------------------
-                    // SALVAR
-                    // -----------------------------------------
+                    /* SALVAR */
 
-                    doc.save(
-                        fileName
-                    );
-
+                    doc.save(fileName);
 
                 } catch (error) {
 
@@ -1458,21 +2437,18 @@
                         error
                     );
 
-
                     alert(
                         'Erro ao gerar o PDF:\n\n' +
                         error.message
                     );
-
                 }
-
             }
         );
 
 
-        // =====================================================
-        // TOTAL INICIAL
-        // =====================================================
+        /* ==============================
+           TOTAL INICIAL
+        ============================== */
 
         calculateTotal();
 
@@ -1481,3 +2457,6 @@
 </body>
 
 </html>
+  
+
+
