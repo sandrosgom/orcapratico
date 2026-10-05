@@ -1,0 +1,16 @@
+{
+  "name": "OrcaPrático - Orçamentos Rápidos",
+  "short_name": "OrcaPrático",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1e293b",
+  "theme_color": "#0766ff",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://flaticon.com",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

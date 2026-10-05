@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>OrçaPrático</title>
+
+    <!-- GERADOR DE PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --primary: #0766ff;
+            --primary-hover: #0052cc;
+            --success: #25d366;
+            --bg-app: #f4f6fa;
+            --surface: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius: 16px;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg-app);
+            color: var(--text-main);
+            padding: 0;
+        }
+
+        /* =========================
+           CABEÇALHO
+        ========================= */
+
+        header {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 20px 15px;
+        }
+
+        header h1 {
+            font-size: 25px;
+            font-weight: 700;
+        }
+
+        /* =========================
+           CONTAINER
+        ========================= */
+
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        /* =========================
+           CARDS
+        ========================= */
+
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 18px;
+            margin-bottom: 15px;
+            box-shadow:
+                0 10px 25px -5px rgba(0,0,0,.05),
+                0 8px 10px -6px rgba(0,0,0,.05);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        /* =========================
+           CAMPOS
+        ========================= */
+
+        .field {
+            margin-bottom: 13px;
+        }
+
+        .field:last-child {
+            margin-bottom: 0;
+        }
+
+        .field label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        input {
+            width: 100%;
+            height: 48px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0 13px;
+            font-size: 16px;
+            outline: none;
+            background: white;
+            color: var(--text-main);
+        }
+
+        input:focus {
+            border-color: var(--primary);
+        }
+
+        /* =========================
+           ITEM
+        ========================= */
+
+        .item-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 105px;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .item-row .item-desc,
+        .item-row .item-price {
+            width: 100%;
+        }
+
+        .item-actions {
+            grid-column: 1 / -1;
+        }
+
+        .btn-remove {
+            width: 100%;
+            height: 38px;
+            border: 0;
+            border-radius: 10px;
+            background: #fee2e2;
+            color: #dc2626;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* =========================
+           BOTÕES
+        ========================= */
+
+        button {
+            font-family: Arial, Helvetica, sans-serif;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-add {
+            width: 100%;
+            height: 50px;
+            border: 0;
+            border-radius: 12px;
+            background: #e8f0ff;
+            color: var(--primary);
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .btn-add:active {
+            transform: scale(.98);
+        }
+
+        .btn-pdf {
+            width: 100%;
+            height: 54px;
+            border: 0;
+            border-radius: 13px;
+            background: var(--primary);
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .btn-pdf:active {
+            background: var(--primary-hover);
+            transform: scale(.98);
+        }
+
+        /* =========================
+           TOTAL
+        ========================= */
+
+        .total-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow:
+                0 10px 25px -5px rgba(0,0,0,.05),
+                0 8px 10px -6px rgba(0,0,0,.05);
+        }
+
+        .total-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .total-label {
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .total-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 480px) {
+
+            .app-container {
+                padding: 12px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            .item-row {
+                grid-template-columns:
+                    minmax(0, 1fr) 100px;
+            }
+
+            .total-value {
+                font-size: 22px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <header>
+
+        <h1>OrçaPrático</h1>
+
+    </header>
+<footer style="text-align:center; padding:10px 15px 20px; color:#64748b; font-size:12px;">
+    Desenvolvido por Adilson Colombo
+</footer>
+
+    <main class="app-container">
+
+
+        <!-- =========================
+             CLIENTE
+        ========================== -->
+
+        <section class="card">
+
+            <div class="card-title">
+                Dados do cliente
+            </div>
+
+            <div class="field">
+
+                <label for="clientName">
+                    Nome do cliente
+                </label>
+
+                <input
+                    type="text"
+                    id="clientName"
+                    placeholder="Digite o nome"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="clientPhone">
+                    Telefone
+                </label>
+
+                <input
+                    type="tel"
+                    id="clientPhone"
+                    placeholder="Digite o telefone"
+                >
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             ITENS
+        ========================== -->
+
+        <section class="card">
+
+            <div class="card-title">
+                Itens do orçamento
+            </div>
+
+
+            <div id="itemsContainer">
+
+                <div class="item-row">
+
+                    <input
+                        type="text"
+                        class="item-desc"
+                        placeholder="Descrição"
+                    >
+
+                    <input
+                        type="text"
+                        inputmode="decimal"
+                        class="item-price"
+                        placeholder="R$ 0,00"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="addItemBtn"
+                class="btn-add"
+            >
+                + Adicionar item
+            </button>
+
+        </section>
+
+
+        <!-- =========================
+             TOTAL
+        ========================== -->
+
+        <section class="total-card">
+
+            <div class="total-line">
+
+                <span class="total-label">
+                    TOTAL
+                </span>
+
+                <span
+                    class="total-value"
+                    id="totalValue"
+                >
+                    R$ 0,00
+                </span>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="generatePdfBtn"
+                class="btn-pdf"
+            >
+                📄 Gerar PDF
+            </button>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ===================================================== -->
+
+    <script>
+
+        // =====================================================
+        // ELEMENTOS
+        // =====================================================
+
+        const itemsContainer =
+            document.getElementById('itemsContainer');
+
+        const addItemBtn =
+            document.getElementById('addItemBtn');
+
+        const totalValue =
+            document.getElementById('totalValue');
+
+        const generatePdfBtn =
+            document.getElementById('generatePdfBtn');
+
+
+        // =====================================================
+        // CONVERTER DINHEIRO
+        // =====================================================
+
+        function parseMoney(value) {
+
+            if (!value) {
+                return 0;
+            }
+
+            let text = String(value).trim();
+
+            text = text
+                .replace(/R\$/gi, '')
+                .replace(/\s/g, '');
+
+            /*
+             * Exemplos:
+             *
+             * 100,50
+             * 1.000,50
+             * 1000.50
+             */
+
+            if (
+                text.includes('.') &&
+                text.includes(',')
+            ) {
+
+                text = text
+                    .replace(/\./g, '')
+                    .replace(',', '.');
+
+            } else {
+
+                text = text.replace(',', '.');
+
+            }
+
+            const number =
+                parseFloat(text);
+
+            return isNaN(number)
+                ? 0
+                : number;
+        }
+
+
+        // =====================================================
+        // FORMATAR DINHEIRO
+        // =====================================================
+
+        function formatMoney(value) {
+
+            return value.toLocaleString(
+                'pt-BR',
+                {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }
+            );
+        }
+
+
+        // =====================================================
+        // CALCULAR TOTAL
+        // =====================================================
+
+        function calculateTotal() {
+
+            const prices =
+                document.querySelectorAll(
+                    '.item-price'
+                );
+
+            let total = 0;
+
+            prices.forEach(input => {
+
+                total +=
+                    parseMoney(input.value);
+
+            });
+
+            totalValue.textContent =
+                'R$ ' + formatMoney(total);
+
+            return total;
+        }
+
+
+        // =====================================================
+        // EVENTO DE PREÇO
+        // =====================================================
+
+        function attachPriceEvent(input) {
+
+            input.addEventListener(
+                'input',
+                () => {
+
+                    calculateTotal();
+
+                }
+            );
+        }
+
+
+        // =====================================================
+        // REMOVER ITEM
+        // =====================================================
+
+        function attachRemoveEvent(
+            button,
+            row
+        ) {
+
+            button.addEventListener(
+                'click',
+                () => {
+
+                    row.remove();
+
+                    calculateTotal();
+
+                }
+            );
+        }
+
+
+        // =====================================================
+        // ADICIONAR ITEM
+        // =====================================================
+
+        addItemBtn.addEventListener(
+            'click',
+            () => {
+
+                const row =
+                    document.createElement('div');
+
+                row.className =
+                    'item-row';
+
+                row.innerHTML = `
+                    <input
+                        type="text"
+                        class="item-desc"
+                        placeholder="Descrição"
+                    >
+
+                    <input
+                        type="text"
+                        inputmode="decimal"
+                        class="item-price"
+                        placeholder="R$ 0,00"
+                    >
+
+                    <div class="item-actions">
+
+                        <button
+                            type="button"
+                            class="btn-remove"
+                        >
+                            🗑️ Remover item
+                        </button>
+
+                    </div>
+                `;
+
+                itemsContainer.appendChild(row);
+
+
+                const priceInput =
+                    row.querySelector(
+                        '.item-price'
+                    );
+
+                attachPriceEvent(
+                    priceInput
+                );
+
+
+                const removeButton =
+                    row.querySelector(
+                        '.btn-remove'
+                    );
+
+                attachRemoveEvent(
+                    removeButton,
+                    row
+                );
+
+
+                calculateTotal();
+
+            }
+        );
+
+
+        // =====================================================
+        // PRIMEIRO ITEM
+        // =====================================================
+
+        const firstPrice =
+            document.querySelector(
+                '.item-price'
+            );
+
+        attachPriceEvent(
+            firstPrice
+        );
+
+
+        // =====================================================
+        // GERAR PDF
+        // =====================================================
+
+        generatePdfBtn.addEventListener(
+            'click',
+            () => {
+
+                try {
+
+                    // -----------------------------------------
+                    // CLIENTE
+                    // -----------------------------------------
+
+                    const clientName =
+                        document
+                            .getElementById(
+                                'clientName'
+                            )
+                            .value
+                            .trim();
+
+
+                    const clientPhone =
+                        document
+                            .getElementById(
+                                'clientPhone'
+                            )
+                            .value
+                            .trim();
+
+
+                    if (!clientName) {
+
+                        alert(
+                            'Por favor, informe o nome do cliente.'
+                        );
+
+                        return;
+                    }
+
+
+                    // -----------------------------------------
+                    // VERIFICAR BIBLIOTECA
+                    // -----------------------------------------
+
+                    if (
+                        typeof window.jspdf ===
+                        'undefined'
+                    ) {
+
+                        alert(
+                            'O sistema de PDF não foi carregado. ' +
+                            'Verifique sua conexão com a internet.'
+                        );
+
+                        return;
+                    }
+
+
+                    // -----------------------------------------
+                    // CRIAR PDF A4
+                    // -----------------------------------------
+
+                    const {
+                        jsPDF
+                    } = window.jspdf;
+
+
+                    const doc =
+                        new jsPDF({
+                            orientation:
+                                'portrait',
+                            unit:
+                                'mm',
+                            format:
+                                'a4'
+                        });
+
+
+                    // -----------------------------------------
+                    // TAMANHO DA PÁGINA
+                    // -----------------------------------------
+
+                    const pageWidth =
+                        doc.internal.pageSize.getWidth();
+
+                    const pageHeight =
+                        doc.internal.pageSize.getHeight();
+
+
+                    const marginLeft = 18;
+                    const marginRight = 18;
+                    const marginTop = 18;
+                    const marginBottom = 18;
+
+
+                    const contentWidth =
+                        pageWidth -
+                        marginLeft -
+                        marginRight;
+
+
+                    let y =
+                        marginTop;
+
+
+                    // -----------------------------------------
+                    // TÍTULO
+                    // -----------------------------------------
+
+                    doc.setFont(
+                        'helvetica',
+                        'bold'
+                    );
+
+                    doc.setFontSize(23);
+
+                    doc.setTextColor(
+                        7,
+                        102,
+                        255
+                    );
+
+                    doc.text(
+                        'DANYY CONFECÇOES ORÇAMENTO',
+                        marginLeft,
+                        y
+                    );
+
+
+                    y += 5;
+
+
+                    doc.setDrawColor(
+                        7,
+                        102,
+                        255
+                    );
+
+                    doc.setLineWidth(
+                        0.7
+                    );
+
+                    doc.line(
+                        marginLeft,
+                        y,
+                        pageWidth -
+                            marginRight,
+                        y
+                    );
+
+
+                    y += 12;
+
+
+                    // -----------------------------------------
+                    // DADOS CLIENTE
+                    // -----------------------------------------
+
+                    doc.setFontSize(11);
+
+                    doc.setTextColor(
+                        40,
+                        40,
+                        40
+                    );
+
+
+                    doc.setFont(
+                        'helvetica',
+                        'bold'
+                    );
+
+                    doc.text(
+                        'Cliente:',
+                        marginLeft,
+                        y
+                    );
+
+
+                    doc.setFont(
+                        'helvetica',
+                        'normal'
+                    );
+
+                    doc.text(
+                        clientName,
+                        marginLeft + 22,
+                        y
+                    );
+
+
+                    y += 7;
+
+
+                    doc.setFont(
+                        'helvetica',
+                        'bold'
+                    );
+
+                    doc.text(
+                        'Telefone:',
+                        marginLeft,
+                        y
+                    );
+
+
+                    doc.setFont(
+                        'helvetica',
+                        'normal'
+                    );
+
+                    doc.text(
+                        clientPhone ||
+                        'Não informado',
+                        marginLeft + 24,
+                        y
+                    );
+
+
+                    y += 7;
+
+
+                    doc.setFont(
+                        'helvetica',
+                        'bold'
+                    );
+
+                    doc.text(
+                        'Data:',
+                        marginLeft,
+                        y
+                    );
+
+
+                    doc.setFont(
+                        'helvetica',
+                        'normal'
+                    );
+
+                    doc.text(
+                        new Date()
+                            .toLocaleDateString(
+                                'pt-BR'
+                            ),
+                        marginLeft + 14,
+                        y
+                    );
+
+
+                    y += 13;
+
+
+                    // -----------------------------------------
+                    // LARGURA DA TABELA
+                    // -----------------------------------------
+
+                    const priceWidth =
+                        42;
+
+                    const descriptionWidth =
+                        contentWidth -
+                        priceWidth;
+
+
+                    const headerHeight =
+                        10;
+
+
+                    // -----------------------------------------
+                    // CABEÇALHO TABELA
+                    // -----------------------------------------
+
+                    doc.setFillColor(
+                        241,
+                        245,
+                        249
+                    );
+
+                    doc.setDrawColor(
+                        210,
+                        210,
+                        210
+                    );
+
+
+                    doc.rect(
+                        marginLeft,
+                        y,
+                        descriptionWidth,
+                        headerHeight,
+                        'FD'
+                    );
+
+
+                    doc.rect(
+                        marginLeft +
+                            descriptionWidth,
+                        y,
+                        priceWidth,
+                        headerHeight,
+                        'FD'
+                    );
+
+
+                    doc.setFont(
+                        'helvetica',
+                        'bold'
+                    );
+
+                    doc.setFontSize(
+                        10
+                    );
+
+                    doc.setTextColor(
+                        40,
+                        40,
+                        40
+                    );
+
+
+                    doc.text(
+                        'Descrição',
+                        marginLeft + 3,
+                        y + 6.5
+                    );
+
+
+                    doc.text(
+                        'Valor',
+                        marginLeft +
+                            descriptionWidth +
+                            priceWidth -
+                            3,
+                        y + 6.5,
+                        {
+                            align: 'right'
+                        }
+                    );
+
+
+                    y += headerHeight;
+
+
+                    // -----------------------------------------
+                    // PEGAR ITENS
+                    // -----------------------------------------
+
+                    const rows =
+                        document.querySelectorAll(
+                            '#itemsContainer .item-row'
+                        );
+
+
+                    let totalFinal = 0;
+
+
+                    rows.forEach(
+                        (row, index) => {
+
+                            const descInput =
+                                row.querySelector(
+                                    '.item-desc'
+                                );
+
+
+                            const priceInput =
+                                row.querySelector(
+                                    '.item-price'
+                                );
+
+
+                            const desc =
+                                descInput.value.trim() ||
+                                'Item ' +
+                                (index + 1);
+
+
+                            const price =
+                                parseMoney(
+                                    priceInput.value
+                                );
+
+
+                            totalFinal +=
+                                price;
+
+
+                            // -----------------------------
+                            // TEXTO DA DESCRIÇÃO
+                            // -----------------------------
+
+                            doc.setFont(
+                                'helvetica',
+                                'normal'
+                            );
+
+                            doc.setFontSize(
+                                10
+                            );
+
+
+                            const lines =
+                                doc.splitTextToSize(
+                                    desc,
+                                    descriptionWidth - 6
+                                );
+
+
+                            const rowHeight =
+                                Math.max(
+                                    10,
+                                    (lines.length * 5) + 5
+                                );
+
+
+                            // -----------------------------
+                            // VERIFICAR ESPAÇO
+                            // -----------------------------
+
+                            if (
+                                y +
+                                rowHeight +
+                                15 >
+                                pageHeight -
+                                marginBottom
+                            ) {
+
+                                doc.addPage();
+
+                                y =
+                                    marginTop;
+
+
+                                doc.setFont(
+                                    'helvetica',
+                                    'bold'
+                                );
+
+                                doc.setFontSize(
+                                    12
+                                );
+
+                                doc.setTextColor(
+                                    7,
+                                    102,
+                                    255
+                                );
+
+                                doc.text(
+                                    'ORÇAMENTO',
+                                    marginLeft,
+                                    y
+                                );
+
+
+                                y += 8;
+
+
+                                // Novo cabeçalho
+                                // da tabela
+
+                                doc.setFillColor(
+                                    241,
+                                    245,
+                                    249
+                                );
+
+                                doc.setDrawColor(
+                                    210,
+                                    210,
+                                    210
+                                );
+
+
+                                doc.rect(
+                                    marginLeft,
+                                    y,
+                                    descriptionWidth,
+                                    headerHeight,
+                                    'FD'
+                                );
+
+
+                                doc.rect(
+                                    marginLeft +
+                                        descriptionWidth,
+                                    y,
+                                    priceWidth,
+                                    headerHeight,
+                                    'FD'
+                                );
+
+
+                                doc.setFont(
+                                    'helvetica',
+                                    'bold'
+                                );
+
+                                doc.setFontSize(
+                                    10
+                                );
+
+                                doc.setTextColor(
+                                    40,
+                                    40,
+                                    40
+                                );
+
+
+                                doc.text(
+                                    'Descrição',
+                                    marginLeft + 3,
+                                    y + 6.5
+                                );
+
+
+                                doc.text(
+                                    'Valor',
+                                    marginLeft +
+                                        descriptionWidth +
+                                        priceWidth -
+                                        3,
+                                    y + 6.5,
+                                    {
+                                        align: 'right'
+                                    }
+                                );
+
+
+                                y +=
+                                    headerHeight;
+
+                            }
+
+
+                            // -----------------------------
+                            // BORDAS
+                            // -----------------------------
+
+                            doc.setDrawColor(
+                                220,
+                                220,
+                                220
+                            );
+
+
+                            doc.rect(
+                                marginLeft,
+                                y,
+                                descriptionWidth,
+                                rowHeight
+                            );
+
+
+                            doc.rect(
+                                marginLeft +
+                                    descriptionWidth,
+                                y,
+                                priceWidth,
+                                rowHeight
+                            );
+
+
+                            // -----------------------------
+                            // DESCRIÇÃO
+                            // -----------------------------
+
+                            doc.setFont(
+                                'helvetica',
+                                'normal'
+                            );
+
+                            doc.setFontSize(
+                                10
+                            );
+
+                            doc.setTextColor(
+                                50,
+                                50,
+                                50
+                            );
+
+
+                            doc.text(
+                                lines,
+                                marginLeft + 3,
+                                y + 6
+                            );
+
+
+                            // -----------------------------
+                            // VALOR
+                            // -----------------------------
+
+                            const priceText =
+                                'R$ ' +
+                                formatMoney(
+                                    price
+                                );
+
+
+                            doc.text(
+                                priceText,
+                                marginLeft +
+                                    descriptionWidth +
+                                    priceWidth -
+                                    3,
+                                y + 6,
+                                {
+                                    align: 'right'
+                                }
+                            );
+
+
+                            y +=
+                                rowHeight;
+
+                        }
+                    );
+
+
+                    // -----------------------------------------
+                    // TOTAL
+                    // -----------------------------------------
+
+                    if (
+                        y + 20 >
+                        pageHeight -
+                        marginBottom
+                    ) {
+
+                        doc.addPage();
+
+                        y =
+                            marginTop;
+
+                    }
+
+
+                    y += 8;
+
+
+                    const totalHeight =
+                        12;
+
+
+                    doc.setFillColor(
+                        248,
+                        250,
+                        252
+                    );
+
+                    doc.setDrawColor(
+                        210,
+                        210,
+                        210
+                    );
+
+
+                    doc.rect(
+                        marginLeft,
+                        y,
+                        descriptionWidth,
+                        totalHeight,
+                        'FD'
+                    );
+
+
+                    doc.rect(
+                        marginLeft +
+                            descriptionWidth,
+                        y,
+                        priceWidth,
+                        totalHeight,
+                        'FD'
+                    );
+
+
+                    doc.setFont(
+                        'helvetica',
+                        'bold'
+                    );
+
+                    doc.setFontSize(
+                        12
+                    );
+
+                    doc.setTextColor(
+                        40,
+                        40,
+                        40
+                    );
+
+
+                    doc.text(
+                        'TOTAL',
+                        marginLeft + 3,
+                        y + 8
+                    );
+
+
+                    doc.setTextColor(
+                        7,
+                        102,
+                        255
+                    );
+
+
+                    doc.text(
+                        'R$ ' +
+                        formatMoney(
+                            totalFinal
+                        ),
+                        marginLeft +
+                            descriptionWidth +
+                            priceWidth -
+                            3,
+                        y + 8,
+                        {
+                            align: 'right'
+                        }
+                    );
+
+
+                    // -----------------------------------------
+                    // RODAPÉ
+                    // -----------------------------------------
+
+                    const pageCount =
+                        doc.internal
+                            .getNumberOfPages();
+
+
+                    for (
+                        let page = 1;
+                        page <= pageCount;
+                        page++
+                    ) {
+
+                        doc.setPage(
+                            page
+                        );
+
+
+                        doc.setFont(
+                            'helvetica',
+                            'normal'
+                        );
+
+                        doc.setFontSize(
+                            8
+                        );
+
+                        doc.setTextColor(
+                            130,
+                            130,
+                            130
+                        );
+
+
+                        doc.text(
+                            'Orçamento gerado pelo OrçaPrático',
+                            marginLeft,
+                            pageHeight - 9
+                        );
+
+
+                        doc.text(
+                            'Página ' +
+                            page +
+                            ' de ' +
+                            pageCount,
+                            pageWidth -
+                                marginRight,
+                            pageHeight - 9,
+                            {
+                                align: 'right'
+                            }
+                        );
+
+                    }
+
+
+                    // -----------------------------------------
+                    // NOME DO ARQUIVO
+                    // -----------------------------------------
+
+                    const safeName =
+                        clientName
+                            .replace(
+                                /[\\/:*?"<>|]/g,
+                                ''
+                            )
+                            .replace(
+                                /\s+/g,
+                                '_'
+                            );
+
+
+                    const fileName =
+                        'Orcamento_' +
+                        safeName +
+                        '.pdf';
+
+
+                    // -----------------------------------------
+                    // SALVAR
+                    // -----------------------------------------
+
+                    doc.save(
+                        fileName
+                    );
+
+
+                } catch (error) {
+
+                    console.error(
+                        'Erro ao gerar PDF:',
+                        error
+                    );
+
+
+                    alert(
+                        'Erro ao gerar o PDF:\n\n' +
+                        error.message
+                    );
+
+                }
+
+            }
+        );
+
+
+        // =====================================================
+        // TOTAL INICIAL
+        // =====================================================
+
+        calculateTotal();
+
+    </script>
+
+</body>
+
+</html>

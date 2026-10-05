@@ -1,0 +1,464 @@
+/* ==========================================================
+   ORÇAPRÁTICO
+   INTERFACE MOBILE
+========================================================== */
+
+:root {
+    --primary: #0766ff;
+    --primary-hover: #0052cc;
+    --success: #25d366;
+    --bg-app: #f4f6fa;
+    --surface: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --radius: 16px;
+    --shadow:
+        0 10px 25px -5px rgba(0, 0, 0, 0.05),
+        0 8px 10px -6px rgba(0, 0, 0, 0.05);
+}
+
+
+/* ==========================================================
+   RESET
+========================================================== */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+/* ==========================================================
+   BODY
+========================================================== */
+
+body {
+    background-color: var(--bg-app);
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+
+/* ==========================================================
+   CABEÇALHO
+========================================================== */
+
+.app-header {
+    background: var(--surface);
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.app-header h1 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: -0.5px;
+}
+
+
+/* ==========================================================
+   CONTAINER DO APLICATIVO
+========================================================== */
+
+.app-container {
+    max-width: 480px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+/* ==========================================================
+   CARTÕES
+========================================================== */
+
+.card {
+    background: var(--surface);
+    padding: 24px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+}
+
+.card h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+
+/* ==========================================================
+   CAMPOS
+========================================================== */
+
+input {
+    width: 100%;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-size: 16px;
+    color: var(--text-main);
+    background-color: #fafafa;
+    transition: all 0.2s ease;
+}
+
+input:last-child {
+    margin-bottom: 0;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary);
+    background-color: var(--surface);
+    box-shadow:
+        0 0 0 4px
+        rgba(7, 102, 255, 0.1);
+}
+
+
+/* ==========================================================
+   LINHA DE ITEM
+========================================================== */
+
+.item-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.item-desc {
+    flex: 2;
+}
+
+.item-price {
+    flex: 1;
+    text-align: right;
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   BOTÕES
+========================================================== */
+
+button {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+
+/* ==========================================================
+   BOTÃO PRINCIPAL
+========================================================== */
+
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+    box-shadow:
+        0 4px 12px
+        rgba(7, 102, 255, 0.2);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+
+/* ==========================================================
+   BOTÃO ADICIONAR
+========================================================== */
+
+.btn-secondary {
+    background-color: #f1f5f9;
+    color: var(--primary);
+    border: 1.5px dashed rgba(7, 102, 255, 0.3);
+    margin-top: 4px;
+}
+
+.btn-secondary:hover {
+    background-color: #e2e8f0;
+}
+
+
+/* ==========================================================
+   TOTAL
+========================================================== */
+
+.total-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    text-align: center;
+    background:
+        linear-gradient(
+            135deg,
+            #1e293b 0%,
+            #0f172a 100%
+        );
+    color: white;
+    border: none;
+}
+
+.total-section h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #94a3b8;
+}
+
+.total-section #totalValue {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #ffffff;
+    display: block;
+    margin-top: 4px;
+}
+
+.total-section .btn-primary {
+    background-color: var(--success);
+    color: white;
+    box-shadow:
+        0 4px 12px
+        rgba(37, 211, 102, 0.2);
+}
+
+.total-section .btn-primary:hover {
+    background-color: #20ba5a;
+}
+
+
+/* ==========================================================
+   PDF
+   CONFIGURAÇÃO CORRIGIDA
+========================================================== */
+
+.pdf-hidden-container {
+    position: absolute;
+    left: -10000px;
+    top: 0;
+    width: 200mm;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+#pdfTemplate {
+    box-sizing: border-box;
+
+    width: 200mm;
+    max-width: 200mm;
+
+    min-height: 287mm;
+
+    padding: 20mm;
+
+    margin: 0;
+
+    background: #ffffff;
+    color: #333333;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    overflow: visible;
+}
+
+
+/* ==========================================================
+   TÍTULO DO PDF
+========================================================== */
+
+.pdf-title {
+    color: #128c7e;
+    border-bottom: 2px solid #128c7e;
+    padding-bottom: 10px;
+    font-size: 24px;
+    margin: 0;
+}
+
+
+/* ==========================================================
+   INFORMAÇÕES DO CLIENTE
+========================================================== */
+
+.pdf-info {
+    margin-top: 12px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.pdf-info:first-of-type {
+    margin-top: 20px;
+}
+
+
+/* ==========================================================
+   TABELA DO PDF
+========================================================== */
+
+.pdf-table {
+    width: 100%;
+    max-width: 100%;
+
+    table-layout: fixed;
+
+    border-collapse: collapse;
+
+    margin-top: 30px;
+}
+
+.pdf-table th,
+.pdf-table td {
+    box-sizing: border-box;
+
+    border: 1px solid #dddddd;
+
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.pdf-table th {
+    padding: 10px 8px;
+    background-color: #f2f2f2;
+}
+
+.pdf-table td {
+    padding: 9px 8px;
+}
+
+
+/* ==========================================================
+   COLUNA DESCRIÇÃO
+========================================================== */
+
+.pdf-table th:first-child,
+.pdf-table td:first-child {
+    width: calc(100% - 120px);
+    text-align: left;
+}
+
+
+/* ==========================================================
+   COLUNA VALOR
+========================================================== */
+
+.pdf-table th:last-child,
+.pdf-table td:last-child {
+    width: 120px;
+    min-width: 120px;
+    max-width: 120px;
+
+    text-align: right;
+
+    white-space: nowrap;
+}
+
+.pdf-description {
+    text-align: left;
+}
+
+.pdf-value {
+    text-align: right;
+
+    width: 120px;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   TOTAL DO PDF
+========================================================== */
+
+.pdf-total-label {
+    text-align: left;
+    font-weight: bold;
+    font-size: 16px;
+    background-color: #f8fafc;
+}
+
+.pdf-total-value {
+    text-align: right;
+    font-weight: bold;
+    font-size: 16px;
+    color: #128c7e;
+    background-color: #f8fafc;
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   EVITAR CORTE DE LINHAS
+========================================================== */
+
+.pdf-table tr {
+    page-break-inside: avoid;
+}
+
+
+/* ==========================================================
+   CELULAR
+========================================================== */
+
+@media (max-width: 480px) {
+
+    .app-container {
+        padding: 16px 12px;
+        gap: 16px;
+    }
+
+    .card {
+        padding: 20px 16px;
+    }
+
+    .item-row {
+        flex-direction: column;
+        gap: 8px;
+        background: #f8fafc;
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+    }
+
+    .item-price {
+        text-align: left;
+    }
+}
