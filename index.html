@@ -521,7 +521,7 @@
                 ></div>
 
                 <div class="login-footer">
-                  Desenvolvido por MADAY SOFTWARE. 
+                    Desenvolvido por MADAY SOFTWARE
                 </div>
 
             </div>
@@ -605,7 +605,7 @@
                 ></div>
 
                 <div class="login-footer">
-                Desenvolvido por MADAY SOFTWARE. 
+                    Desenvolvido por MADAY SOFTWARE
                 </div>
 
             </div>
@@ -684,6 +684,20 @@
                     >
 
                 </div>
+                 <div class="field">
+
+                    <label for="clientvalidade">
+                        Validade do Orçamento
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="clientvalidade"
+                        placeholder="Digite o Prazo do Orçamento"
+                    >
+
+                </div>
+
 
             </section>
 
@@ -761,7 +775,7 @@
 
 
         <footer class="app-footer">
-          Desenvolvido por MADAY SOFTWARE. 
+            Desenvolvido por MADAY SOFTWARE
         </footer>
 
     </div>
@@ -1095,83 +1109,7 @@ const logoutBtn =
                 }
             }
         );
-/* ==============================
-   ESQUECI MINHA SENHA
-============================== */
 
-forgotPasswordBtn.addEventListener(
-    'click',
-    async () => {
-
-        clearLoginMessage();
-
-        const email =
-            loginEmail.value.trim();
-
-        if (!email) {
-            showLoginMessage(
-                'Digite seu e-mail para recuperar a senha.'
-            );
-            return;
-        }
-
-        forgotPasswordBtn.disabled = true;
-
-        forgotPasswordBtn.textContent =
-            'Enviando...';
-
-        try {
-
-            const {
-                error
-            } = await supabaseClient
-                .auth
-                .resetPasswordForEmail(
-                    email,
-                    {
-                        redirectTo:
-                            window.location.origin +
-                            window.location.pathname
-                    }
-                );
-
-            if (error) {
-
-                console.error(
-                    'Erro ao recuperar senha:',
-                    error
-                );
-
-                showLoginMessage(
-                    error.message
-                );
-
-                return;
-            }
-
-            showLoginMessage(
-                'Enviamos um link para seu e-mail. Verifique também a caixa de spam.',
-                'success'
-            );
-
-        } catch (error) {
-
-            console.error(error);
-
-            showLoginMessage(
-                'Não foi possível enviar o link de recuperação.'
-            );
-
-        } finally {
-
-            forgotPasswordBtn.disabled =
-                false;
-
-            forgotPasswordBtn.textContent =
-                'Esqueci minha senha';
-        }
-    }
-);
 
         /* ==============================
            CRIAR CONTA
@@ -1796,6 +1734,14 @@ forgotPasswordBtn.addEventListener(
                             .value
                             .trim();
 
+                    const clientValidade =
+                        document
+                            .getElementById(
+                                'clientvalidade'
+                            )
+                            .value
+                            .trim();
+
                     if (!clientName) {
 
                         alert(
@@ -1864,11 +1810,88 @@ forgotPasswordBtn.addEventListener(
                         255
                     );
 
-                    doc.text(
-                        'DANY CONFECÇOES ORÇAMENTO',
-                        marginLeft,
-                        y
-                    );
+                   doc.setFont(
+    'helvetica',
+    'bold'
+);
+
+doc.setFontSize(18);
+
+doc.setFont(
+    'helvetica',
+    'bold'
+);
+
+doc.setFontSize(18);
+
+doc.setFont('helvetica', 'bold');
+doc.setFontSize(18);
+
+
+    
+doc.setFont('helvetica', 'bold');
+doc.setFontSize(18);
+
+doc.text(
+    'ELETRONICA NOSSA SENHORA APARECIDA',
+    marginLeft,
+    y
+);
+
+y += 6;
+
+doc.setFont('helvetica', 'normal');
+doc.setFontSize(10);
+
+doc.text(
+    'Rua Campo Mourão 1085',
+    marginLeft,
+    y
+);
+
+y += 5;
+
+doc.text(
+    'Colombo - Parana',
+    marginLeft,
+    y
+);
+
+y += 5;
+
+doc.text(
+    'Telefone: (41) 98409-7193',
+    marginLeft,
+    y
+);
+
+y += 5;
+
+doc.text(
+    'Contato: ADILSON',
+    marginLeft,
+    y
+);
+
+y += 9;
+
+
+/* ORÇAMENTO CENTRALIZADO */
+doc.setFont('helvetica', 'bold');
+doc.setFontSize(16);
+
+doc.text(
+    'ORÇAMENTO',
+    pageWidth / 2,
+    y,
+    { align: 'center' }
+);
+
+y += 10;
+
+y += 10;
+
+y += 10;
 
                     y += 5;
 
@@ -1973,6 +1996,32 @@ forgotPasswordBtn.addEventListener(
                                 'pt-BR'
                             ),
                         marginLeft + 14,
+                        y
+                    );
+
+                    y += 7;
+
+                    doc.setFont(
+                        'helvetica',
+                        'bold'
+                    );
+
+                    doc.text(
+                        'Validade:',
+                        marginLeft,
+                        y
+                    );
+
+                    doc.setFont(
+                        'helvetica',
+                        'normal'
+                    );
+
+                    doc.text(
+                        clientValidade
+                            ? clientValidade + ' dias'
+                            : 'Não informado',
+                        marginLeft + 22,
                         y
                     );
 
@@ -2457,6 +2506,3 @@ forgotPasswordBtn.addEventListener(
 </body>
 
 </html>
-  
-
-
