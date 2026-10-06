@@ -1,10 +1,9 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>OrçaPrático</title>
 
     <!-- SUPABASE -->
@@ -162,6 +161,17 @@
             cursor: pointer;
         }
 
+        .btn-forgot {
+            width: 100%;
+            height: 42px;
+            border: 0;
+            background: transparent;
+            color: var(--primary);
+            font-size: 14px;
+            margin-top: 5px;
+            cursor: pointer;
+        }
+
         .btn-reset {
             width: 100%;
             height: 52px;
@@ -316,16 +326,25 @@
             border-color: var(--primary);
         }
 
+        /* ==============================
+           ITENS
+        ============================== */
+
         .item-row {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) 105px;
+            grid-template-columns: 72px minmax(0, 1fr) 105px;
             gap: 8px;
             margin-bottom: 10px;
         }
 
+        .item-row .item-quantity,
         .item-row .item-desc,
         .item-row .item-price {
             width: 100%;
+        }
+
+        .item-quantity {
+            text-align: center;
         }
 
         .item-actions {
@@ -427,7 +446,7 @@
             }
 
             .item-row {
-                grid-template-columns: minmax(0, 1fr) 100px;
+                grid-template-columns: 62px minmax(0, 1fr) 92px;
             }
 
             .total-value {
@@ -444,9 +463,7 @@
     ============================== -->
 
     <div id="loginScreen">
-
         <div class="login-container">
-
             <div class="login-card">
 
                 <div class="login-logo">
@@ -462,7 +479,6 @@
                 </div>
 
                 <div class="login-field">
-
                     <label for="loginEmail">
                         E-mail
                     </label>
@@ -473,11 +489,9 @@
                         placeholder="Digite seu e-mail"
                         autocomplete="email"
                     >
-
                 </div>
 
                 <div class="login-field">
-
                     <label for="loginPassword">
                         Senha
                     </label>
@@ -488,7 +502,6 @@
                         placeholder="Digite sua senha"
                         autocomplete="current-password"
                     >
-
                 </div>
 
                 <button
@@ -504,17 +517,17 @@
                     id="registerBtn"
                     class="btn-register"
                 >
-                 
-                Criar nova conta
+                    Criar nova conta
                 </button>
 
                 <button
-    type="button"
-    id="forgotPasswordBtn"
-    class="btn-forgot"
->
-    Esqueci minha senha
-</button>
+                    type="button"
+                    id="forgotPasswordBtn"
+                    class="btn-forgot"
+                >
+                    Esqueci minha senha
+                </button>
+
                 <div
                     id="loginMessage"
                     class="login-message"
@@ -525,9 +538,7 @@
                 </div>
 
             </div>
-
         </div>
-
     </div>
 
 
@@ -536,9 +547,7 @@
     ============================== -->
 
     <div id="resetScreen">
-
         <div class="login-container">
-
             <div class="login-card">
 
                 <div class="login-logo">
@@ -554,7 +563,6 @@
                 </div>
 
                 <div class="login-field">
-
                     <label for="newPassword">
                         Nova senha
                     </label>
@@ -565,11 +573,9 @@
                         placeholder="Digite a nova senha"
                         autocomplete="new-password"
                     >
-
                 </div>
 
                 <div class="login-field">
-
                     <label for="newPasswordConfirm">
                         Confirmar nova senha
                     </label>
@@ -580,7 +586,6 @@
                         placeholder="Digite novamente"
                         autocomplete="new-password"
                     >
-
                 </div>
 
                 <button
@@ -609,9 +614,7 @@
                 </div>
 
             </div>
-
         </div>
-
     </div>
 
 
@@ -622,13 +625,11 @@
     <div id="appScreen">
 
         <header>
-
             <h1>
                 OrçaPrático
             </h1>
 
             <div class="user-bar">
-
                 <span
                     id="userEmail"
                     class="user-email"
@@ -641,9 +642,7 @@
                 >
                     Sair
                 </button>
-
             </div>
-
         </header>
 
 
@@ -658,7 +657,6 @@
                 </div>
 
                 <div class="field">
-
                     <label for="clientName">
                         Nome do cliente
                     </label>
@@ -668,11 +666,9 @@
                         id="clientName"
                         placeholder="Digite o nome"
                     >
-
                 </div>
 
                 <div class="field">
-
                     <label for="clientPhone">
                         Telefone
                     </label>
@@ -682,22 +678,20 @@
                         id="clientPhone"
                         placeholder="Digite o telefone"
                     >
-
                 </div>
-                 <div class="field">
 
+                <div class="field">
                     <label for="clientvalidade">
                         Validade do Orçamento
                     </label>
 
                     <input
-                        type="tel"
+                        type="number"
                         id="clientvalidade"
-                        placeholder="Digite o Prazo do Orçamento"
+                        placeholder="Digite o prazo em dias"
+                        min="1"
                     >
-
                 </div>
-
 
             </section>
 
@@ -713,6 +707,15 @@
                 <div id="itemsContainer">
 
                     <div class="item-row">
+
+                        <input
+                            type="number"
+                            class="item-quantity"
+                            min="1"
+                            step="1"
+                            value="1"
+                            placeholder="Qtd."
+                        >
 
                         <input
                             type="text"
@@ -831,12 +834,13 @@
             document.getElementById('loginBtn');
 
         const registerBtn =
-    document.getElementById('registerBtn');
-const forgotPasswordBtn =
-    document.getElementById('forgotPasswordBtn');
-const logoutBtn =
-    document.getElementById('logoutBtn');
-            
+            document.getElementById('registerBtn');
+
+        const forgotPasswordBtn =
+            document.getElementById('forgotPasswordBtn');
+
+        const logoutBtn =
+            document.getElementById('logoutBtn');
 
         const userEmail =
             document.getElementById('userEmail');
@@ -934,6 +938,7 @@ const logoutBtn =
 
             newPassword.value = '';
             newPasswordConfirm.value = '';
+
             resetMessage.textContent = '';
             resetMessage.className =
                 'login-message';
@@ -964,16 +969,8 @@ const logoutBtn =
                     );
 
                     showLogin();
-
                     return;
                 }
-
-                /*
-                 * Se o link de recuperação estiver
-                 * sendo processado, não abrimos o app.
-                 * A tela de nova senha será mostrada
-                 * pelo evento PASSWORD_RECOVERY.
-                 */
 
                 const hash =
                     window.location.hash;
@@ -984,7 +981,6 @@ const logoutBtn =
                 if (isRecovery) {
 
                     showResetPassword();
-
                     return;
                 }
 
@@ -1000,7 +996,6 @@ const logoutBtn =
                 } else {
 
                     showLogin();
-
                 }
 
             } catch (error) {
@@ -1050,7 +1045,6 @@ const logoutBtn =
                 }
 
                 loginBtn.disabled = true;
-
                 loginBtn.textContent =
                     'Entrando...';
 
@@ -1063,8 +1057,10 @@ const logoutBtn =
                         await supabaseClient
                             .auth
                             .signInWithPassword({
+
                                 email: email,
                                 password: password
+
                             });
 
                     if (error) {
@@ -1154,8 +1150,7 @@ const logoutBtn =
                     return;
                 }
 
-                registerBtn.disabled =
-                    true;
+                registerBtn.disabled = true;
 
                 registerBtn.textContent =
                     'Criando conta...';
@@ -1169,8 +1164,10 @@ const logoutBtn =
                         await supabaseClient
                             .auth
                             .signUp({
+
                                 email: email,
                                 password: password
+
                             });
 
                     if (error) {
@@ -1219,6 +1216,88 @@ const logoutBtn =
 
                     registerBtn.textContent =
                         'Criar nova conta';
+                }
+            }
+        );
+
+
+        /* ==============================
+           ESQUECI MINHA SENHA
+        ============================== */
+
+        forgotPasswordBtn.addEventListener(
+            'click',
+            async () => {
+
+                clearLoginMessage();
+
+                const email =
+                    loginEmail.value.trim();
+
+                if (!email) {
+
+                    showLoginMessage(
+                        'Digite seu e-mail para recuperar a senha.'
+                    );
+
+                    return;
+                }
+
+                forgotPasswordBtn.disabled = true;
+
+                forgotPasswordBtn.textContent =
+                    'Enviando...';
+
+                try {
+
+                    const {
+                        error
+                    } =
+                        await supabaseClient
+                            .auth
+                            .resetPasswordForEmail(
+                                email,
+                                {
+                                    redirectTo:
+                                        window.location.origin +
+                                        window.location.pathname
+                                }
+                            );
+
+                    if (error) {
+
+                        console.error(
+                            'Erro ao recuperar senha:',
+                            error
+                        );
+
+                        showLoginMessage(
+                            error.message
+                        );
+
+                        return;
+                    }
+
+                    showLoginMessage(
+                        'Enviamos um link para redefinir sua senha.',
+                        'success'
+                    );
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    showLoginMessage(
+                        'Não foi possível enviar o e-mail de recuperação.'
+                    );
+
+                } finally {
+
+                    forgotPasswordBtn.disabled =
+                        false;
+
+                    forgotPasswordBtn.textContent =
+                        'Esqueci minha senha';
                 }
             }
         );
@@ -1276,7 +1355,6 @@ const logoutBtn =
                 try {
 
                     const {
-                        data,
                         error
                     } =
                         await supabaseClient
@@ -1303,12 +1381,6 @@ const logoutBtn =
                         'Senha alterada com sucesso!',
                         'success'
                     );
-
-                    /*
-                     * Depois de alterar a senha,
-                     * encerramos a sessão e voltamos
-                     * para o login.
-                     */
 
                     setTimeout(
                         async () => {
@@ -1426,26 +1498,14 @@ const logoutBtn =
                     session
                 ) => {
 
-                    /*
-                     * ESTE É O PONTO PRINCIPAL
-                     * DA RECUPERAÇÃO DE SENHA.
-                     */
-
                     if (
                         event ===
                         'PASSWORD_RECOVERY'
                     ) {
 
                         showResetPassword();
-
                         return;
                     }
-
-                    /*
-                     * Se estivermos na tela de
-                     * recuperação, não devemos
-                     * abrir o aplicativo.
-                     */
 
                     if (
                         resetScreen.style.display ===
@@ -1562,28 +1622,66 @@ const logoutBtn =
 
         function calculateTotal() {
 
-            const prices =
+            const rows =
                 document.querySelectorAll(
-                    '.item-price'
+                    '#itemsContainer .item-row'
                 );
 
             let total = 0;
 
-            prices.forEach(
-                input => {
+            rows.forEach(row => {
 
-                    total +=
-                        parseMoney(
-                            input.value
-                        );
+                const quantityInput =
+                    row.querySelector(
+                        '.item-quantity'
+                    );
+
+                const priceInput =
+                    row.querySelector(
+                        '.item-price'
+                    );
+
+                let quantity =
+                    parseFloat(
+                        quantityInput.value
+                    );
+
+                if (
+                    isNaN(quantity) ||
+                    quantity <= 0
+                ) {
+                    quantity = 1;
                 }
-            );
+
+                const price =
+                    parseMoney(
+                        priceInput.value
+                    );
+
+                total +=
+                    quantity * price;
+            });
 
             totalValue.textContent =
                 'R$ ' +
                 formatMoney(total);
 
             return total;
+        }
+
+
+        /* ==============================
+           EVENTO DE QUANTIDADE
+        ============================== */
+
+        function attachQuantityEvent(input) {
+
+            input.addEventListener(
+                'input',
+                () => {
+                    calculateTotal();
+                }
+            );
         }
 
 
@@ -1596,7 +1694,6 @@ const logoutBtn =
             input.addEventListener(
                 'input',
                 () => {
-
                     calculateTotal();
                 }
             );
@@ -1642,6 +1739,15 @@ const logoutBtn =
 
                 row.innerHTML = `
                     <input
+                        type="number"
+                        class="item-quantity"
+                        min="1"
+                        step="1"
+                        value="1"
+                        placeholder="Qtd."
+                    >
+
+                    <input
                         type="text"
                         class="item-desc"
                         placeholder="Descrição"
@@ -1668,6 +1774,15 @@ const logoutBtn =
 
                 itemsContainer.appendChild(
                     row
+                );
+
+                const quantityInput =
+                    row.querySelector(
+                        '.item-quantity'
+                    );
+
+                attachQuantityEvent(
+                    quantityInput
                 );
 
                 const priceInput =
@@ -1698,10 +1813,19 @@ const logoutBtn =
            PRIMEIRO ITEM
         ============================== */
 
+        const firstQuantity =
+            document.querySelector(
+                '.item-quantity'
+            );
+
         const firstPrice =
             document.querySelector(
                 '.item-price'
             );
+
+        attachQuantityEvent(
+            firstQuantity
+        );
 
         attachPriceEvent(
             firstPrice
@@ -1795,14 +1919,16 @@ const logoutBtn =
                         marginTop;
 
 
-                    /* TÍTULO */
+                    /* ==============================
+                       TÍTULO
+                    ============================== */
 
                     doc.setFont(
                         'helvetica',
                         'bold'
                     );
 
-                    doc.setFontSize(23);
+                    doc.setFontSize(18);
 
                     doc.setTextColor(
                         7,
@@ -1810,90 +1936,81 @@ const logoutBtn =
                         255
                     );
 
-                   doc.setFont(
-    'helvetica',
-    'bold'
-);
+                    doc.text(
+                        'ELETRONICA NOSSA SENHORA APARECIDA',
+                        marginLeft,
+                        y
+                    );
 
-doc.setFontSize(18);
+                    y += 6;
 
-doc.setFont(
-    'helvetica',
-    'bold'
-);
+                    doc.setFont(
+                        'helvetica',
+                        'normal'
+                    );
 
-doc.setFontSize(18);
+                    doc.setFontSize(10);
 
-doc.setFont('helvetica', 'bold');
-doc.setFontSize(18);
+                    doc.setTextColor(
+                        40,
+                        40,
+                        40
+                    );
 
-
-    
-doc.setFont('helvetica', 'bold');
-doc.setFontSize(18);
-
-doc.text(
-    'ELETRONICA NOSSA SENHORA APARECIDA',
-    marginLeft,
-    y
-);
-
-y += 6;
-
-doc.setFont('helvetica', 'normal');
-doc.setFontSize(10);
-
-doc.text(
-    'Rua Campo Mourão 1085',
-    marginLeft,
-    y
-);
-
-y += 5;
-
-doc.text(
-    'Colombo - Parana',
-    marginLeft,
-    y
-);
-
-y += 5;
-
-doc.text(
-    'Telefone: (41) 98409-7193',
-    marginLeft,
-    y
-);
-
-y += 5;
-
-doc.text(
-    'Contato: ADILSON',
-    marginLeft,
-    y
-);
-
-y += 9;
-
-
-/* ORÇAMENTO CENTRALIZADO */
-doc.setFont('helvetica', 'bold');
-doc.setFontSize(16);
-
-doc.text(
-    'ORÇAMENTO',
-    pageWidth / 2,
-    y,
-    { align: 'center' }
-);
-
-y += 10;
-
-y += 10;
-
-y += 10;
+                    doc.text(
+                        'Rua Campo Mourão 1085',
+                        marginLeft,
+                        y
+                    );
 
                     y += 5;
+
+                    doc.text(
+                        'Colombo - Parana',
+                        marginLeft,
+                        y
+                    );
+
+                    y += 5;
+
+                    doc.text(
+                        'Telefone: (41) 98409-7193',
+                        marginLeft,
+                        y
+                    );
+
+                    y += 5;
+
+                    doc.text(
+                        'Contato: ADILSON',
+                        marginLeft,
+                        y
+                    );
+
+                    y += 9;
+
+
+                    /* ==============================
+                       ORÇAMENTO
+                    ============================== */
+
+                    doc.setFont(
+                        'helvetica',
+                        'bold'
+                    );
+
+                    doc.setFontSize(16);
+
+                    doc.text(
+                        'ORÇAMENTO',
+                        pageWidth / 2,
+                        y,
+                        {
+                            align: 'center'
+                        }
+                    );
+
+                    y += 10;
 
                     doc.setDrawColor(
                         7,
@@ -1915,7 +2032,9 @@ y += 10;
                     y += 12;
 
 
-                    /* CLIENTE */
+                    /* ==============================
+                       CLIENTE
+                    ============================== */
 
                     doc.setFontSize(11);
 
@@ -2028,12 +2147,16 @@ y += 10;
                     y += 13;
 
 
-                    /* TABELA */
+                    /* ==============================
+                       TABELA
+                    ============================== */
 
+                    const quantityWidth = 20;
                     const priceWidth = 42;
 
                     const descriptionWidth =
                         contentWidth -
+                        quantityWidth -
                         priceWidth;
 
                     const headerHeight = 10;
@@ -2056,6 +2179,15 @@ y += 10;
                     doc.rect(
                         marginLeft,
                         y,
+                        quantityWidth,
+                        headerHeight,
+                        'FD'
+                    );
+
+                    doc.rect(
+                        marginLeft +
+                        quantityWidth,
+                        y,
                         descriptionWidth,
                         headerHeight,
                         'FD'
@@ -2063,6 +2195,7 @@ y += 10;
 
                     doc.rect(
                         marginLeft +
+                        quantityWidth +
                         descriptionWidth,
                         y,
                         priceWidth,
@@ -2075,7 +2208,7 @@ y += 10;
                         'bold'
                     );
 
-                    doc.setFontSize(10);
+                    doc.setFontSize(9);
 
                     doc.setTextColor(
                         40,
@@ -2084,14 +2217,26 @@ y += 10;
                     );
 
                     doc.text(
+                        'Qtd.',
+                        marginLeft +
+                        quantityWidth / 2,
+                        y + 6.5,
+                        {
+                            align: 'center'
+                        }
+                    );
+
+                    doc.text(
                         'Descrição',
-                        marginLeft + 3,
+                        marginLeft +
+                        quantityWidth + 3,
                         y + 6.5
                     );
 
                     doc.text(
-                        'Valor',
+                        'Valor unit.',
                         marginLeft +
+                        quantityWidth +
                         descriptionWidth +
                         priceWidth -
                         3,
@@ -2104,7 +2249,9 @@ y += 10;
                     y += headerHeight;
 
 
-                    /* ITENS */
+                    /* ==============================
+                       ITENS
+                    ============================== */
 
                     const rows =
                         document.querySelectorAll(
@@ -2116,6 +2263,11 @@ y += 10;
                     rows.forEach(
                         (row, index) => {
 
+                            const quantityInput =
+                                row.querySelector(
+                                    '.item-quantity'
+                                );
+
                             const descInput =
                                 row.querySelector(
                                     '.item-desc'
@@ -2125,6 +2277,18 @@ y += 10;
                                 row.querySelector(
                                     '.item-price'
                                 );
+
+                            let quantity =
+                                parseFloat(
+                                    quantityInput.value
+                                );
+
+                            if (
+                                isNaN(quantity) ||
+                                quantity <= 0
+                            ) {
+                                quantity = 1;
+                            }
 
                             const desc =
                                 descInput.value.trim() ||
@@ -2136,7 +2300,11 @@ y += 10;
                                     priceInput.value
                                 );
 
-                            totalFinal += price;
+                            const itemTotal =
+                                quantity * price;
+
+                            totalFinal +=
+                                itemTotal;
 
 
                             const lines =
@@ -2189,6 +2357,8 @@ y += 10;
                                 y += 8;
 
 
+                                /* CABEÇALHO DA NOVA PÁGINA */
+
                                 doc.setFillColor(
                                     241,
                                     245,
@@ -2204,6 +2374,15 @@ y += 10;
                                 doc.rect(
                                     marginLeft,
                                     y,
+                                    quantityWidth,
+                                    headerHeight,
+                                    'FD'
+                                );
+
+                                doc.rect(
+                                    marginLeft +
+                                    quantityWidth,
+                                    y,
                                     descriptionWidth,
                                     headerHeight,
                                     'FD'
@@ -2211,6 +2390,7 @@ y += 10;
 
                                 doc.rect(
                                     marginLeft +
+                                    quantityWidth +
                                     descriptionWidth,
                                     y,
                                     priceWidth,
@@ -2223,7 +2403,7 @@ y += 10;
                                     'bold'
                                 );
 
-                                doc.setFontSize(10);
+                                doc.setFontSize(9);
 
                                 doc.setTextColor(
                                     40,
@@ -2232,14 +2412,26 @@ y += 10;
                                 );
 
                                 doc.text(
+                                    'Qtd.',
+                                    marginLeft +
+                                    quantityWidth / 2,
+                                    y + 6.5,
+                                    {
+                                        align: 'center'
+                                    }
+                                );
+
+                                doc.text(
                                     'Descrição',
-                                    marginLeft + 3,
+                                    marginLeft +
+                                    quantityWidth + 3,
                                     y + 6.5
                                 );
 
                                 doc.text(
-                                    'Valor',
+                                    'Valor unit.',
                                     marginLeft +
+                                    quantityWidth +
                                     descriptionWidth +
                                     priceWidth -
                                     3,
@@ -2264,12 +2456,21 @@ y += 10;
                             doc.rect(
                                 marginLeft,
                                 y,
+                                quantityWidth,
+                                rowHeight
+                            );
+
+                            doc.rect(
+                                marginLeft +
+                                quantityWidth,
+                                y,
                                 descriptionWidth,
                                 rowHeight
                             );
 
                             doc.rect(
                                 marginLeft +
+                                quantityWidth +
                                 descriptionWidth,
                                 y,
                                 priceWidth,
@@ -2277,7 +2478,7 @@ y += 10;
                             );
 
 
-                            /* DESCRIÇÃO */
+                            /* QUANTIDADE */
 
                             doc.setFont(
                                 'helvetica',
@@ -2293,13 +2494,28 @@ y += 10;
                             );
 
                             doc.text(
+                                String(quantity),
+                                marginLeft +
+                                quantityWidth / 2,
+                                y + 6,
+                                {
+                                    align: 'center'
+                                }
+                            );
+
+
+                            /* DESCRIÇÃO */
+
+                            doc.text(
                                 lines,
-                                marginLeft + 3,
+                                marginLeft +
+                                quantityWidth +
+                                3,
                                 y + 6
                             );
 
 
-                            /* VALOR */
+                            /* VALOR UNITÁRIO */
 
                             const priceText =
                                 'R$ ' +
@@ -2308,6 +2524,7 @@ y += 10;
                             doc.text(
                                 priceText,
                                 marginLeft +
+                                quantityWidth +
                                 descriptionWidth +
                                 priceWidth -
                                 3,
@@ -2322,7 +2539,9 @@ y += 10;
                     );
 
 
-                    /* TOTAL */
+                    /* ==============================
+                       TOTAL
+                    ============================== */
 
                     if (
                         y + 20 >
@@ -2340,6 +2559,10 @@ y += 10;
 
                     const totalHeight = 12;
 
+                    const totalLabelWidth =
+                        quantityWidth +
+                        descriptionWidth;
+
                     doc.setFillColor(
                         248,
                         250,
@@ -2355,14 +2578,14 @@ y += 10;
                     doc.rect(
                         marginLeft,
                         y,
-                        descriptionWidth,
+                        totalLabelWidth,
                         totalHeight,
                         'FD'
                     );
 
                     doc.rect(
                         marginLeft +
-                        descriptionWidth,
+                        totalLabelWidth,
                         y,
                         priceWidth,
                         totalHeight,
@@ -2398,7 +2621,7 @@ y += 10;
                         'R$ ' +
                         formatMoney(totalFinal),
                         marginLeft +
-                        descriptionWidth +
+                        totalLabelWidth +
                         priceWidth -
                         3,
                         y + 8,
@@ -2408,7 +2631,9 @@ y += 10;
                     );
 
 
-                    /* RODAPÉ */
+                    /* ==============================
+                       RODAPÉ
+                    ============================== */
 
                     const pageCount =
                         doc.internal
@@ -2456,7 +2681,9 @@ y += 10;
                     }
 
 
-                    /* NOME DO ARQUIVO */
+                    /* ==============================
+                       NOME DO ARQUIVO
+                    ============================== */
 
                     const safeName =
                         clientName
@@ -2475,7 +2702,9 @@ y += 10;
                         '.pdf';
 
 
-                    /* SALVAR */
+                    /* ==============================
+                       SALVAR
+                    ============================== */
 
                     doc.save(fileName);
 
@@ -2504,5 +2733,5 @@ y += 10;
     </script>
 
 </body>
-
 </html>
+```
